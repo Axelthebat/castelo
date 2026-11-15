@@ -1,0 +1,26 @@
+{
+  "name": "castelo",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Plataforma de xadrez online — jogue, analise, evolua.",
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "npm run dev --workspaces --if-present",
+    "dev:server": "npm run dev -w @castelo/server",
+    "dev:web": "npm run dev -w @castelo/web",
+    "build": "npm run build -w @castelo/engine && npm run build -w @castelo/shared && npm run build -w @castelo/server && npm run build -w @castelo/web",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "db:reset": "npm run db:reset -w @castelo/server"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.3"
+  }
+}

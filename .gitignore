@@ -1,0 +1,77 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+!.env.sample
+
+# Build outputs
+dist/
+build/
+out/
+.next/
+.nuxt/
+.output/
+coverage/
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# Cache
+.cache/
+.parcel-cache/
+.turbo/
+.eslintcache/
+.vite/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDEs and editors
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+*.swp
+*.swo
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.bak
+
+# Testing
+playwright-report/
+test-results/
+.nyc_output/
+
+# Runtime
+*.pid
+*.seed
+pids/
+
+# Local databases
+*.sqlite
+*.sqlite3
+*.db
+
+# Package manager
+.npm/
+.pnpm-store/
+
+# Deployment
+.vercel/
+.netlify/
+
+# TypeScript
+*.tsbuildinfo

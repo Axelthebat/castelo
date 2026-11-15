@@ -1,0 +1,200 @@
+/*
+ * Castelo — tabuleiro.
+ * O tabuleiro e o elemento memoravel da interface: tudo aqui e pensado
+ * para a peca ser o unico objeto de alto contraste na tela.
+ */
+
+.cb-root {
+  --cb-light: var(--board-walnut-light);
+  --cb-dark: var(--board-walnut-dark);
+  --cb-coord-on-light: var(--board-walnut-coord-on-light);
+  --cb-coord-on-dark: var(--board-walnut-coord-on-dark);
+
+  width: 100%;
+  max-width: 560px;
+  margin-inline: auto;
+}
+
+.cb-board {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  grid-template-rows: repeat(8, minmax(0, 1fr));
+  aspect-ratio: 1 / 1;
+  width: 100%;
+  border-radius: var(--radius-3);
+  overflow: hidden;
+  background-color: var(--cb-dark);
+  user-select: none;
+}
+
+.cb-square {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  background-color: var(--cb-dark);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.cb-square[data-tone="light"] {
+  background-color: var(--cb-light);
+}
+
+.cb-square:disabled {
+  cursor: default;
+}
+
+/* Brilho de foco e de passar do ponteiro: camadas planas, sem gradiente. */
+.cb-square::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: var(--color-ink);
+  opacity: 0;
+  transition: opacity var(--duration-100) var(--ease-standard);
+}
+
+.cb-square:hover:not(:disabled)::before {
+  opacity: 0.12;
+}
+
+.cb-square:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: -2px;
+}
+
+/* Casa selecionada: tinta de aceto, discreta. */
+.cb-square[data-state~="selected"]::before {
+  opacity: 0.42;
+  background-color: var(--color-accent);
+}
+
+/* Ultimo lance: lavagem de aceto mais fraca. */
+.cb-square[data-state~="last"]::before {
+  opacity: 0.22;
+  background-color: var(--color-accent);
+}
+
+/* Xeque: lavado vermelho sobre a casa do rei. */
+.cb-square[data-state~="check"]::before {
+  opacity: 0.5;
+  background-color: var(--color-danger);
+}
+
+.cb-square[data-state~="check"][data-state~="last"]::before {
+  opacity: 0.62;
+  background-color: var(--color-danger);
+}
+
+/* ---------------------------------------------------------------- *
+ * Peca
+ * ---------------------------------------------------------------- */
+.cb-piece {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.cb-piece svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.cb-piece--moving {
+  animation: castelo-piece-slide 180ms var(--ease-piece);
+}
+
+@keyframes castelo-piece-slide {
+  from {
+    transform: translate(var(--piece-dx, 0%), var(--piece-dy, 0%));
+  }
+  to {
+    transform: translate(0%, 0%);
+  }
+}
+
+/* ---------------------------------------------------------------- *
+ * Movimento legal
+ * ---------------------------------------------------------------- */
+.cb-marker {
+  position: absolute;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.cb-marker--dot {
+  width: 26%;
+  height: 26%;
+  border-radius: 999px;
+  background-color: var(--color-ink);
+  opacity: 0.42;
+}
+
+.cb-marker--capture {
+  inset: 6%;
+  border-radius: 999px;
+  border: 0.22rem solid var(--color-ink);
+  opacity: 0.42;
+}
+
+/* ---------------------------------------------------------------- *
+ * Coordenadas (dentro da casa, nunca fora)
+ * ---------------------------------------------------------------- */
+.cb-coord {
+  position: absolute;
+  z-index: 3;
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  font-weight: 600;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.cb-rank {
+  top: 5%;
+  left: 6%;
+}
+
+.cb-file {
+  right: 6%;
+  bottom: 5%;
+}
+
+.cb-square[data-tone="light"] .cb-coord {
+  color: var(--cb-coord-on-light);
+}
+
+.cb-square[data-tone="dark"] .cb-coord {
+  color: var(--cb-coord-on-dark);
+}
+
+/* Orientacao preta: as coordenadas espelham para os cantos opostos. */
+.cb-board--flipped .cb-rank {
+  top: 5%;
+  right: 6%;
+  left: auto;
+}
+
+.cb-board--flipped .cb-file {
+  right: auto;
+  bottom: 5%;
+  left: 6%;
+}
+
+/* ---------------------------------------------------------------- *
+ * Esqueleto
+ * ---------------------------------------------------------------- */
+.cb-skeleton-square {
+  background-color: var(--cb-dark);
+}
+
+.cb-skeleton-square[data-tone="light"] {
+  background-color: var(--cb-light);
+}

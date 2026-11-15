@@ -1,0 +1,180 @@
+/*
+ * Castelo — tokens do sistema de design.
+ * Fonte: docs/CONTRATO.md, secao 6. Nenhum componente deve usar cor crua:
+ * tudo passa por estas custom properties.
+ */
+
+:root {
+  color-scheme: dark;
+
+  /* ---------------------------------------------------------------- *
+   * Superficies (passo de tom, nunca linha nem sombra)
+   * ---------------------------------------------------------------- */
+  --color-ground: #1f1c19;
+  --color-surface: #2a2622;
+  --color-raised: #332e29;
+  --color-sunken: #171512;
+  --color-hairline: #3b352e;
+
+  /* ---------------------------------------------------------------- *
+   * Tinta
+   * ---------------------------------------------------------------- */
+  --color-ink: #f4eee2;
+  --color-ink-muted: #a79c8c;
+  --color-ink-faint: #6e6558;
+
+  /* ---------------------------------------------------------------- *
+   * Acento (latao) — reservado a acoes, selecao e foco
+   * ---------------------------------------------------------------- */
+  --color-accent: #d8a33b;
+  --color-accent-soft: #edbc57;
+  --color-accent-ink: #201a0c;
+
+  /* ---------------------------------------------------------------- *
+   * Estado
+   * ---------------------------------------------------------------- */
+  --color-success: #7fb069;
+  --color-danger: #d0603c;
+  --color-info: #5ea0a8;
+
+  /* Tinta sobre o vermelho de perigo (contraste verificado em DECISOES-WEB.md). */
+  --color-danger-ink: #120804;
+
+  /* ---------------------------------------------------------------- *
+   * Tabuleiros — paleta clara e escura de cada tema.
+   * `coord-clara` e `coord-escura` sao os valores do contrato.
+   * `coord-on-light` e `coord-on-dark` sao os valores efetivamente
+   * usados na casa: a cor da casa oposta, escurecida ou clareada ate
+   * manter contraste legivel. Ver docs/DECISOES-WEB.md.
+   * ---------------------------------------------------------------- */
+  --board-walnut-light: #efe3cb;
+  --board-walnut-dark: #7a5b3c;
+  --board-walnut-coord-clara: #c3ab84;
+  --board-walnut-coord-escura: #f0e6d2;
+  --board-walnut-coord-on-light: #6e5130;
+  --board-walnut-coord-on-dark: #f0e6d2;
+
+  --board-emerald-light: #ebecd0;
+  --board-emerald-dark: #739552;
+  --board-emerald-coord-clara: #ebecd0;
+  --board-emerald-coord-escura: #739552;
+  --board-emerald-coord-on-light: #3e5526;
+  --board-emerald-coord-on-dark: #f7f9f2;
+
+  --board-slate-light: #e4e7ea;
+  --board-slate-dark: #7c8896;
+  --board-slate-coord-clara: #e4e7ea;
+  --board-slate-coord-escura: #7c8896;
+  --board-slate-coord-on-light: #39424c;
+  --board-slate-coord-on-dark: #f2f4f6;
+
+  --board-ice-light: #eaf2f6;
+  --board-ice-dark: #9bb7c4;
+  --board-ice-coord-clara: #eaf2f6;
+  --board-ice-coord-escura: #9bb7c4;
+  --board-ice-coord-on-light: #3f5a69;
+  --board-ice-coord-on-dark: #ffffff;
+
+  /* ---------------------------------------------------------------- *
+   * Pecas — a troca de tema acontece aqui
+   * ---------------------------------------------------------------- */
+  --piece-fill: #f4eee2;
+  --piece-stroke: #1b1815;
+  --piece-shade: #d9d0c0;
+
+  /* ---------------------------------------------------------------- *
+   * Espacamento (grade de 4px do contrato)
+   * ---------------------------------------------------------------- */
+  --space-1: 0.1rem;
+  --space-2: 0.2rem;
+  --space-4: 0.4rem;
+  --space-6: 0.6rem;
+  --space-8: 0.8rem;
+  --space-12: 1.2rem;
+  --space-16: 1.6rem;
+  --space-24: 2.4rem;
+  --space-32: 3.2rem;
+  --space-40: 4rem;
+  --space-80: 8rem;
+
+  /* ---------------------------------------------------------------- *
+   * Raios
+   * ---------------------------------------------------------------- */
+  --radius-2: 0.2rem;
+  --radius-3: 0.3rem;
+  --radius-5: 0.5rem;
+  --radius-10: 1rem;
+
+  /* ---------------------------------------------------------------- *
+   * Elevacao — apenas no que flutua (popover, modal, tooltip)
+   * ---------------------------------------------------------------- */
+  --shadow-popover: 0 0.3rem 0.8rem rgba(0, 0, 0, 0.35);
+  --shadow-modal: 0 0.8rem 2.4rem rgba(0, 0, 0, 0.6);
+
+  /* ---------------------------------------------------------------- *
+   * Tipografia
+   * ---------------------------------------------------------------- */
+  /*
+   * Pilha de sistema para o corpo. As familias explicitas vem antes das
+   * palavras chave (-apple-system e companhia) porque em alguns sistemas
+   * a palavra chave resolve para a fonte de tela padrao, que nem sempre
+   * e proporcional.
+   */
+  --font-display: "Space Grotesk", "Segoe UI", "Adwaita Sans", "Noto Sans", Arial,
+    sans-serif;
+  --font-text: "Segoe UI", "Adwaita Sans", -apple-system, BlinkMacSystemFont, Roboto,
+    "Helvetica Neue", "Noto Sans", Arial, sans-serif;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  --text-4xl: 2.25rem;
+  --text-display: 3rem;
+
+  --text-xs--line-height: 1.35;
+  --text-sm--line-height: 1.45;
+  --text-base--line-height: 1.55;
+  --text-lg--line-height: 1.4;
+  --text-xl--line-height: 1.3;
+  --text-2xl--line-height: 1.2;
+  --text-3xl--line-height: 1.15;
+  --text-4xl--line-height: 1.1;
+  --text-display--line-height: 1;
+
+  --leading-tight: 1.15;
+  --leading-snug: 1.35;
+  --leading-normal: 1.55;
+
+  --tracking-tight: -0.02em;
+
+  /* ---------------------------------------------------------------- *
+   * Movimento
+   * ---------------------------------------------------------------- */
+  --duration-50: 50ms;
+  --duration-100: 100ms;
+  --duration-150: 150ms;
+  --duration-200: 200ms;
+  --duration-250: 250ms;
+  --duration-300: 300ms;
+  --duration-400: 400ms;
+  --duration-500: 500ms;
+
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-soft: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-piece: cubic-bezier(0.22, 0.61, 0.36, 1);
+
+  /* ---------------------------------------------------------------- *
+   * Camadas
+   * ---------------------------------------------------------------- */
+  --z-base: 0;
+  --z-raised: 10;
+  --z-sticky: 20;
+  --z-dropdown: 30;
+  --z-overlay: 40;
+  --z-modal: 50;
+  --z-toast: 60;
+}
