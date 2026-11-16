@@ -297,7 +297,8 @@ quando `NODE_ENV=production`). Header `X-CSRF-Token` obrigatório em métodos mu
 entregue no login/registro e no `GET /api/auth/me`, e salvo na sessão.
 
 Rate limiting (por IP, via `@fastify/rate-limit`):
-- `auth:*` → 10 req / 5 min
+- `auth:register|login|forgot|reset` → 10 req / 5 min
+- `auth:me|logout` → 60 req / min (`me` roda a cada navegação)
 - `POST /api/games/:id/move` → 120 req / min
 - resto da API → 300 req / min
 

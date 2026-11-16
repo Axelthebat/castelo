@@ -11,8 +11,13 @@ import fastifyRateLimit from '@fastify/rate-limit';
  */
 
 export const RATE_LIMITS = {
+  /** Credenciais: register, login, forgot e reset. */
   auth: { max: 10, timeWindow: '5 minutes' },
+  /** Sessão: `me` e `logout` — `me` roda a cada navegação, não pode travar o usuário. */
+  session: { max: 60, timeWindow: '1 minute' },
+  /** Jogadas. */
   move: { max: 120, timeWindow: '1 minute' },
+  /** Demais rotas da API. */
   default: { max: 300, timeWindow: '1 minute' },
 } as const;
 

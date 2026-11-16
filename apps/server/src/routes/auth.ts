@@ -90,14 +90,14 @@ export async function registerAuthRoutes(app: FastifyInstance): Promise<void> {
     });
   });
 
-  app.post('/logout', { preHandler: [requireAuth], config: { rateLimit: RATE_LIMITS.auth } }, async (req, reply) => {
+  app.post('/logout', { preHandler: [requireAuth], config: { rateLimit: RATE_LIMITS.session } }, async (req, reply) => {
     const db = getDb();
     destroySession(req, db);
     clearSessionCookie(reply);
     return reply.code(204).send();
   });
 
-  app.get('/me', { preHandler: [requireAuth], config: { rateLimit: RATE_LIMITS.auth } }, async (req) => {
+  app.get('/me', { preHandler: [requireAuth], config: { rateLimit: RATE_LIMITS.session } }, async (req) => {
     const db = getDb();
     const user = req.currentUser!;
     const found = getSession(req, db);
