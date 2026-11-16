@@ -49,8 +49,8 @@ export function registerErrorHandlers(app: FastifyInstance): void {
       return;
     }
 
-    // Rate limit (plugin registra statusCode 429 e code FST_...).
-    if (status === 429) {
+    // Rate limit (o plugin registra statusCode 429 e code FST_...).
+    if (status === 429 || err.code === 'rate_limit') {
       reply.code(429).send(apiError('rate_limit', 'Muitas requisições. Tente novamente em instantes.'));
       return;
     }

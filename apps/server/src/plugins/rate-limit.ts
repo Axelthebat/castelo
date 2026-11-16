@@ -21,12 +21,16 @@ export async function registerRateLimit(app: FastifyInstance): Promise<void> {
     global: false,
     max: RATE_LIMITS.default.max,
     timeWindow: RATE_LIMITS.default.timeWindow,
-    errorResponseBuilder: () => ({
-      error: {
-        code: 'rate_limit',
-        message: 'Muitas requisições. Tente novamente em instantes.',
-      },
-    }),
+    // O corpo precisa manter o status 429: um objeto simples perderia o
+    // `statusCode` e o handler global responderia 500.
+    errorResponseBuilder: () => {
+      const error = new Error(
+        'Muitas requisições. Tente novamente em instantes.',
+      ) as Error & { statusCode: number; code: string };
+      error.statusCode = 429;
+      error.code = 'rate_limit';
+      return error;
+    },
     addHeadersOnExceeding: {
       'x-ratelimit-limit': true,
       'x-ratelimit-remaining': true,
