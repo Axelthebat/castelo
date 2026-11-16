@@ -22,7 +22,9 @@ const envSchema = z.object({
   DATABASE_PATH: z.string().min(1).default(defaultDatabasePath),
   NODE_ENV: nodeEnvSchema.default('development'),
   SESSION_TTL_HOURS: z.coerce.number().int().min(1).max(24 * 365).default(24),
-  APP_ORIGIN: z.string().url().default('http://localhost:5173'),
+  // Aceita uma lista separada por vírgula: em desenvolvimento o front pode ser
+  // aberto por localhost ou pelo IP da máquina na rede local.
+  APP_ORIGIN: z.string().default('http://localhost:5173'),
   SESSION_SECRET: z.string().min(16).optional(),
 });
 
@@ -53,6 +55,14 @@ let cached: Env | null = null;
 export function getEnv(): Env {
   if (!cached) cached = loadEnv();
   return cached;
+}
+
+/** Origens liberadas na CSP e no CORS de desenvolvimento. */
+export function appOrigins(): string[] {
+  return getEnv()
+    .APP_ORIGIN.split(',')
+    .map((origin) => origin.trim())
+    .filter(Boolean);
 }
 
 export function isProduction(): boolean {

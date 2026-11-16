@@ -11,6 +11,8 @@ export default defineConfig({
     },
   },
   server: {
+    // host 0.0.0.0 deixa o front acessível também pelo IP da máquina na rede local.
+    host: '0.0.0.0',
     port: 5173,
     strictPort: true,
     proxy: {

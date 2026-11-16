@@ -2,7 +2,7 @@ import type { FastifyInstance } from 'fastify';
 import fastifyCookie from '@fastify/cookie';
 import fastifyCors from '@fastify/cors';
 import fastifyHelmet from '@fastify/helmet';
-import { getEnv, isDevelopment } from '../env.ts';
+import { appOrigins, isDevelopment } from '../env.ts';
 
 /**
  * Segurança HTTP: helmet (CSP), cookie e CORS.
@@ -11,15 +11,19 @@ import { getEnv, isDevelopment } from '../env.ts';
  * - CORS só em desenvolvimento, com credenciais.
  */
 export async function registerSecurity(app: FastifyInstance): Promise<void> {
-  const env = getEnv();
+  const origins = appOrigins();
 
   const directives: Record<string, string[]> = isDevelopment()
     ? {
         defaultSrc: ["'self'"],
-        scriptSrc: ["'self'", "'unsafe-inline'", env.APP_ORIGIN],
-        styleSrc: ["'self'", "'unsafe-inline'", env.APP_ORIGIN],
-        imgSrc: ["'self'", 'data:', env.APP_ORIGIN],
-        connectSrc: ["'self'", env.APP_ORIGIN, `ws://${new URL(env.APP_ORIGIN).host}`],
+        scriptSrc: ["'self'", "'unsafe-inline'", ...origins],
+        styleSrc: ["'self'", "'unsafe-inline'", ...origins],
+        imgSrc: ["'self'", 'data:', ...origins],
+        connectSrc: [
+          "'self'",
+          ...origins,
+          ...origins.map((origin) => origin.replace(/^http/, 'ws')),
+        ],
         fontSrc: ["'self'", 'data:'],
         objectSrc: ["'none'"],
         frameAncestors: ["'none'"],
@@ -46,7 +50,7 @@ export async function registerSecurity(app: FastifyInstance): Promise<void> {
 
   if (isDevelopment()) {
     await app.register(fastifyCors, {
-      origin: env.APP_ORIGIN,
+      origin: origins,
       credentials: true,
     });
   }
