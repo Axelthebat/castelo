@@ -15,13 +15,28 @@ O wrapper `Position` traduz o `Move` do chess.js para o `MoveInfo` do contrato e
 antes de aplicá-lo.
 
 **Bot com negamax, não com Stockfish.** Não há binário externo no ambiente, e a exigência era um bot
-real. O motor usa negamax iterativo com poda alfa-beta, quiescência, tabelas de material e posição
-por casa, bônus de par de bispos, penalidade de peão dobrado e ordenação MVV-LVA. O tempo de
-cálculo é limitado por orçamento de tempo checado dentro do laço de busca.
+real. O motor usa negamax iterativo com Principal Variation Search, tabela de transposição,
+killer moves, histórico, redução de lance tardio, extensão de xeque, corte de futility e
+quiescência com ordenação MVV-LVA. A avaliação soma material, posição por casa, par de bispos,
+estrutura de peões (dobrado, isolado, passado), torre em coluna aberta, escudo do rei e o direito
+de initiative.
 
-**Níveis baixos jogam de propósito.** `blunderRate` faz o bot escolher um lance fraco com uma
-probabilidade definida por nível. Isso dá aos níveis aprendiz e casual o comportamento de alguém
-que está aprendendo, em vez de um motor forte com peças aleatórias.
+**Tabuleiro próprio para a busca.** O chess.js continua sendo a referência de regras do projeto,
+mas `chess.moves({ verbose: true })` custa cerca de 856µs porque cada lance gera dois FEN — um
+gargalo que limitava a busca à profundidade 4. O motor usa um tabuleiro interno de 64 casas com
+make/unmake e gerador de lances próprios, o que elevateou a busca para ~1 milhão de nós em 3
+segundos. A correção do gerador é provada por `perft`: as contagens de lances batem com o chess.js
+em seis posições de referência (inicial, Kiwipete, final de peões, promoções e mais duas) até a
+profundidade 4.
+
+**Níveis medidos por margem de erro, não por lance aleatório.** Cada nível tem uma profundidade, um
+orçamento de tempo e uma margem (`noise`) em centipontos. O bot joga o melhor lance foundo, mas
+com probabilidade `blunderRate` escolhe entre os lances dentro da margem. O resultado é um erro
+humano: o aprendiz abre com 1.b4 e ignora material, mas não pendura a rainha. A margem impede que o
+nível iniciante perca peça de graça; o mestre joga sempre o melhor lance.
+
+**Tempo por lance x. tempo de espera.** O serviço do bot espera de 350ms a 900ms antes de responder,
+para não parecer instantâneo. Os orçamentos de busca (200ms a 2s) são somados a essa espera.
 
 **`eloUpdate` usa K variável.** K = 40 abaixo de 2100, 20 até 2400 e 10 acima disso, em vez do K
 fixo de 32 que a primeira implementação do servidor usava. O servidor passou a usar a função do

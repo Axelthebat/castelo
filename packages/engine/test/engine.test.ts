@@ -7,6 +7,8 @@ import {
   toPgn,
   parsePgn,
   botMove,
+  botSearchStats,
+  BOT_PROFILES,
   isValidFen,
   describeFen,
   START_FEN,
@@ -176,4 +178,63 @@ test('gameEnd devolve over=false durante a partida', () => {
   const end = position.gameEnd();
   assert.equal(end.over, false);
   assert.equal(end.result, '*');
+});
+
+
+/* ------------------------------------------------------------------ *
+ * Bot
+ * ------------------------------------------------------------------ */
+
+test('o bot encontra xeque-mate em um lance em todos os níveis', () => {
+  const position = new Position('6k1/5ppp/8/8/8/8/5PPP/R5K1 w - - 0 1');
+  for (const difficulty of ['beginner', 'casual', 'strong', 'master'] as const) {
+    const move = botMove(position, { difficulty, seed: 11 });
+    assert.equal(move.san, 'Ra8#', `nível ${difficulty}`);
+  }
+});
+
+test('o bot não pendura a rainha nos níveis fortes', () => {
+  // A rainha preta está pendurada em h4; capturá-la é o melhor lance.
+  const position = new Position('4k3/8/8/8/7q/8/8/R3K3 w - - 0 1');
+  for (const difficulty of ['strong', 'master'] as const) {
+    const move = botMove(position, { difficulty, seed: 5 });
+    assert.notEqual(move.to, 'h4', `nível ${difficulty} não pode ignorar a captura`);
+  }
+});
+
+test('o botLevels fortes procuram mais fundo que os fracos', () => {
+  const position = new Position();
+  const fraco = botSearchStats(position, { difficulty: 'beginner', seed: 3 });
+  const forte = botSearchStats(position, { difficulty: 'strong', seed: 3 });
+  assert.ok(forte.depth >= fraco.depth, `forte=${forte.depth} fraco=${fraco.depth}`);
+  assert.ok(forte.nodes > fraco.nodes);
+});
+
+test('o bot devolve sempre um lance legal, mesmo em posição apertada', () => {
+  const positions = [
+    'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
+    'r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1',
+    '8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - 0 1',
+  ];
+  for (const fen of positions) {
+    const position = new Position(fen);
+    for (const difficulty of ['beginner', 'casual', 'strong', 'master'] as const) {
+      const move = botMove(position, { difficulty, seed: 13 });
+      assert.ok(
+        position.isLegal(move.from, move.to, move.promotion),
+        `nível ${difficulty} devolveu lance ilegal em ${fen}`,
+      );
+    }
+  }
+});
+
+test('os níveis do bot têm budgets crescentes', () => {
+  const budgets = (['beginner', 'casual', 'strong', 'master'] as const).map(
+    (difficulty) => BOT_PROFILES[difficulty].timeBudgetMs,
+  );
+  for (let index = 1; index < budgets.length; index += 1) {
+    assert.ok(budgets[index] >= budgets[index - 1]);
+  }
+  assert.ok(BOT_PROFILES.master.noise === 0);
+  assert.ok(BOT_PROFILES.beginner.noise > 0);
 });

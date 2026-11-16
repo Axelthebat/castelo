@@ -28,9 +28,18 @@ resultado de um jogo.
 
 ## Partida contra o bot
 
-O bot roda no servidor com busca negamax, poda alfa-beta, extensão de captura (quiescência),
-tabelas de avaliação posicional e ordenação MVV-LVA. A profundidade e o tempo de cálculo variam
-por nível.
+O bot roda no servidor com busca negamax, Principal Variation Search, tabela de transposição,
+killer moves, histórico, redução de lance tardio e quiescência. A avaliação soma material, posição
+por casa, estrutura de peões, torre em coluna aberta e escudo do rei.
+
+A busca usa um tabuleiro interno próprio, com make/unmake: o `chess.js` gera dois FEN por lance e
+custa ~856µs, o que limitava a busca à profundidade 4. Com o gerador próprio — validado por `perft`
+contra o `chess.js` em seis posições de referência — o motor chega a ~1 milhão de nós em 3
+segundos.
+
+Os quatro níveis não jogam lance aleatório. Cada um tem uma margem de erro em centipontos: o bot
+escolhe entre os lances aceitáveis, o que produz erro humano em vez de erro absurdo. O aprendiz abre
+com 1.b4 e ignora material, mas não pendura a rainha.
 
 ![Partida contra o bot com relógio e lista de lances](docs/img/partida.png)
 
@@ -61,7 +70,7 @@ partidas clássicas com PGN real — inclusive a famouslya Opera Game de Morphy.
 ```bash
 npm run build        # compila engine, shared, server e web
 npm run typecheck    # TypeScript estrito em todos os pacotes
-npm test             # 38 testes: 17 do engine, 21 do servidor
+npm test             # 66 testes: 45 do engine, 21 do servidor
 npm run db:reset -w @castelo/server   # apaga e recria o banco
 ```
 
@@ -127,9 +136,11 @@ navegador ◀──WS game:move───┴── game.emit() para os dois jogad
 npm test
 ```
 
-- `packages/engine` — 17 testes: contagem de lances legais, xeque-mate, stalemate, material
+- `packages/engine` — 45 testes: contagem de lances legais, xeque-mate, stalemate, material
   insuficiente, round-trip de FEN e PGN, simetria do Elo, débito e incremento do relógio, e
-  garantia de que o bot devolve sempre um lance legal.
+  garantia de que o bot devolve sempre um lance legal. Mais 23 testes de `perft` que comparam o
+  gerador de lances do bot com o `chess.js` em seis posições de referência, e a checagem de que
+  make/unmake devolve o tabuleiro exatamente ao estado anterior.
 - `apps/server` — 21 testes: hash e verificação de senha, criação e destruição de sessão, registro,
   duplicidade, login por usuário e por e-mail, 401 sem sessão, 403 sem CSRF, 404 canônico, ausência
   de e-mail no perfil público e o ciclo completo de autenticação com cookie e CSRF.

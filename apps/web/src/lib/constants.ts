@@ -1,4 +1,5 @@
 import type { RatingCategory } from '@castelo/shared';
+import { BOT_PROFILES, type BotProfile } from '@castelo/engine';
 
 export interface NavItem {
   label: string;
@@ -67,34 +68,26 @@ export function findTimeControl(id: string): TimeControlOption | undefined {
   return TIME_CONTROLS.find((option) => option.id === id);
 }
 
-export const BOT_DIFFICULTIES = [
-  {
-    id: 'beginner',
-    label: 'Aprendiz',
-    description: 'Erra bastante — ideal para começar',
-    depth: 1,
-  },
-  {
-    id: 'casual',
-    label: 'Casual',
-    description: 'Joga razoavelmente, com deslizes',
-    depth: 2,
-  },
-  {
-    id: 'strong',
-    label: 'Forte',
-    description: 'Poucos erros, e pune os seus deslizes',
-    depth: 4,
-  },
-  {
-    id: 'master',
-    label: 'Mestre',
-    description: 'Busca profunda, sem piedade',
-    depth: 6,
-  },
-] as const;
+/**
+ * Os níveis vêm do motor: uma única fonte de verdade para rótulo,
+ * descrição e profundidade.
+ */
+export const BOT_DIFFICULTIES = (Object.entries(BOT_PROFILES) as [
+  BotDifficultyId,
+  BotProfile,
+][]).map(([id, profile]) => ({
+  id,
+  label: profile.label,
+  description: profile.description,
+  depth: profile.depth,
+})) as ReadonlyArray<{
+  id: BotDifficultyId;
+  label: string;
+  description: string;
+  depth: number;
+}>;
 
-export type BotDifficultyId = (typeof BOT_DIFFICULTIES)[number]['id'];
+export type BotDifficultyId = 'beginner' | 'casual' | 'strong' | 'master';
 
 export const BOARD_THEMES = [
   { id: 'walnut', label: 'Nogueira', swatch: ['#EFE3CB', '#7A5B3C'] },

@@ -5,6 +5,7 @@ export { eloUpdate, expectedScore, kFactor, type EloResult } from './rating.ts';
 export { toPgn, parsePgn, PgnParseError, type PgnHeaders } from './pgn.ts';
 export {
   botMove,
+  botSearchStats,
   BOT_PROFILES,
   type BotDifficulty,
   type BotOptions,
