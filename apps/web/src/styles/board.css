@@ -9,6 +9,9 @@
   --cb-dark: var(--board-walnut-dark);
   --cb-coord-on-light: var(--board-walnut-coord-on-light);
   --cb-coord-on-dark: var(--board-walnut-coord-on-dark);
+  /* Marcadores de lance legal: escuro com aro claro, para ler nas duas cores de casa. */
+  --cb-marker: rgb(26 20 13 / 0.58);
+  --cb-marker-rim: rgb(255 255 255 / 0.7);
 
   width: 100%;
   max-width: 560px;
@@ -57,8 +60,15 @@
   transition: opacity var(--duration-100) var(--ease-standard);
 }
 
-.cb-square:hover:not(:disabled)::before {
-  opacity: 0.12;
+/* Passagem do ponteiro: tinta escura nas casas claras e clara nas escuras. */
+.cb-square[data-tone="light"]:hover:not(:disabled)::before {
+  background-color: rgb(26 20 13);
+  opacity: 0.13;
+}
+
+.cb-square[data-tone="dark"]:hover:not(:disabled)::before {
+  background-color: #ffffff;
+  opacity: 0.14;
 }
 
 .cb-square:focus-visible {
@@ -66,10 +76,14 @@
   outline-offset: -2px;
 }
 
-/* Casa selecionada: tinta de aceto, discreta. */
+/* Casa selecionada: tinta de aceto com contorno, para nao passar despercebida. */
 .cb-square[data-state~="selected"]::before {
-  opacity: 0.42;
+  opacity: 0.5;
   background-color: var(--color-accent);
+}
+
+.cb-square[data-state~="selected"] {
+  box-shadow: inset 0 0 0 2px var(--color-accent);
 }
 
 /* Ultimo lance: lavagem de aceto mais fraca. */
@@ -130,18 +144,18 @@
 }
 
 .cb-marker--dot {
-  width: 26%;
-  height: 26%;
+  width: 32%;
+  height: 32%;
   border-radius: 999px;
-  background-color: var(--color-ink);
-  opacity: 0.42;
+  background-color: var(--cb-marker);
+  box-shadow: 0 0 0 1px var(--cb-marker-rim);
 }
 
 .cb-marker--capture {
-  inset: 6%;
+  inset: 4%;
   border-radius: 999px;
-  border: 0.22rem solid var(--color-ink);
-  opacity: 0.42;
+  border: 0.3rem solid var(--cb-marker);
+  box-shadow: inset 0 0 0 1px var(--cb-marker-rim);
 }
 
 /* ---------------------------------------------------------------- *

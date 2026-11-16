@@ -4,19 +4,18 @@ import { ChessBoard } from '../board/ChessBoard.tsx';
 import { Button } from '../ui/Button.tsx';
 import { Icon } from '../icons.tsx';
 
+/** Abertura italiana — sequência legal verificada lance a lance. */
 const OPENING: string[] = [
   'e2e4',
   'e7e5',
   'g1f3',
   'b8c6',
   'f1c4',
-  'g8f6',
-  'e1g1',
   'f8c5',
-  'd2d4',
-  'c5d4',
-  'f3d4',
+  'e1g1',
   'g8f6',
+  'd2d3',
+  'd7d6',
 ];
 
 /**
@@ -68,14 +67,20 @@ export function DemoBoard() {
 
   function playOpening() {
     const next = new Position();
-    for (const move of OPENING) {
-      const [from, to] = move.split('');
-      next.move(from, to);
+    try {
+      for (const move of OPENING) {
+        next.move(move.slice(0, 2), move.slice(2, 4));
+      }
+    } catch {
+      // Abertura inválida: mantém a posição inicial.
+      reset();
+      return;
     }
     setPosition(next);
     setSelected(null);
-    setHistory([]);
-    setLastMove({ from: OPENING.at(-1)!.slice(0, 2), to: OPENING.at(-1)!.slice(2, 4) });
+    setHistory(next.history().map((move) => move.san));
+    const last = OPENING.at(-1)!;
+    setLastMove({ from: last.slice(0, 2), to: last.slice(2, 4) });
   }
 
   return (

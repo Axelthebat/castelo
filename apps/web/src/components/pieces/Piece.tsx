@@ -11,6 +11,15 @@ export interface PieceProps {
 }
 
 /**
+ * A cor do tabuleiro e `w`/`b`, mas a classe de tema usa o nome por extenso.
+ * A traducao fica aqui para que o CSS nunca dependa do formato do FEN.
+ */
+const COLOR_CLASS: Record<PieceColor, string> = {
+  w: 'piece-white',
+  b: 'piece-black',
+};
+
+/**
  * Uma peca do tabuleiro.
  *
  * As cores vem de custom properties (`.piece-white` / `.piece-black`),
@@ -21,11 +30,13 @@ export function Piece({ type, color, className }: PieceProps) {
   const geometry = PIECE_GEOMETRY[type];
   const rawId = useId();
   const clipId = `castelo-piece-${rawId.replace(/[^a-zA-Z0-9]/g, '')}`;
+  const classes = ['piece', COLOR_CLASS[color]];
+  if (className) classes.push(className);
 
   return (
     <svg
       viewBox={PIECE_VIEW_BOX}
-      className={className ? `piece piece-${color} ${className}` : `piece piece-${color}`}
+      className={classes.join(' ')}
       aria-hidden="true"
       focusable="false"
       shapeRendering="geometricPrecision"

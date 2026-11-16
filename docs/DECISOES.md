@@ -73,6 +73,23 @@ mantém a CSP em `font-src 'self'`.
 para uma rota inexistente seria pior do que não oferecer a opção. O item volta junto com o
 conteúdo, sem dados fictícios no lugar.
 
+## Tabuleiro
+
+**Classe de cor das peças.** A cor no tabuleiro é `w`/`b` (como no FEN), mas o CSS define
+`.piece-white` e `.piece-black`. O componente `Piece` traduz `w`/`b` para esses nomes: o CSS não
+depende do formato do FEN e o `Piece` nunca emite uma classe que não exista na folha de estilo.
+
+**Marcadores de lance legal em escuro com aro claro.** A primeira versão usava ivory a 42% de
+opacidade — praticamente invisível sobre as casas claras do tabuleiro. Agora o marcador é
+`rgb(26 20 13 / 0.58)` com aro branco, o que lê tanto nas casas claras quanto nas escuras. A casa
+selecionada ganhou contorno de acento e o hover usa tinta escura nas casas claras e clara nas
+escuras.
+
+**Abertura do quadro de demonstração.** A sequência inicial era montada com `split('')`, que
+quebrava `e2e4` em caracteres e fazia o botão "Abertura" falhar silenciosamente. Passou a fatiar a
+casa por posição, com a abertura italiana verificada lance a lance e fallback para a posição
+inicial caso a sequência deixe de ser legal.
+
 ## Processamento de texto
 
 O texto visível do site foi reescrito com a skill de escrita profissional: removidas formulações
