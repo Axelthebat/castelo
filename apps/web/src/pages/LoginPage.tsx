@@ -47,7 +47,7 @@ export default function LoginPage() {
       <div className="rounded-lg bg-[var(--color-surface)] p-6 sm:p-8">
         <h1 className="text-2xl font-bold tracking-tight">Entrar</h1>
         <p className="mt-1 text-sm text-[var(--color-ink-muted)]">
-          Use seu nome de usuário ou e-mail.
+          Entre com seu nome de usuário ou e-mail.
         </p>
 
         {error && (
@@ -93,7 +93,7 @@ export default function LoginPage() {
               to="/forgot"
               className="text-sm text-[var(--color-accent)] underline-offset-4 hover:underline"
             >
-              Esqueci a senha
+              Esqueci minha senha
             </Link>
           </div>
 

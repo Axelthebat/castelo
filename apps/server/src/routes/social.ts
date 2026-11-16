@@ -1,4 +1,4 @@
-import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
+import type { FastifyInstance, FastifyRequest } from 'fastify';
 import { z } from 'zod';
 import { HttpError } from '../errors.ts';
 import { parseBody } from '../lib/validate.ts';
@@ -8,17 +8,12 @@ import { getDb } from '../db/index.ts';
 import {
   acceptFriendRequest,
   createFriendRequest,
-  findFriendship,
   listFriends,
   removeFriendship,
 } from '../repos/friends.ts';
 import { findUserByUsername } from '../repos/users.ts';
 import { newId } from '../lib/ids.ts';
 import { nowIso } from '../lib/time.ts';
-
-const csrfGuard = async (req: FastifyRequest, reply: FastifyReply): Promise<void> => {
-  await requireCsrf(req, reply);
-};
 
 const requestSchema = z.object({
   username: z.string().trim().min(3).max(20),
@@ -42,7 +37,7 @@ export async function registerSocialRoutes(app: FastifyInstance): Promise<void> 
     return { friends: listFriends(getDb(), user.id) };
   });
 
-  app.post('/api/friends/request', { preHandler: [requireAuth, csrfGuard] }, async (req) => {
+  app.post('/api/friends/request', { preHandler: [requireAuth, requireCsrf] }, async (req) => {
     const user = currentUser(req);
     const payload = parseBody(requestSchema, req.body);
     const db = getDb();
@@ -66,7 +61,7 @@ export async function registerSocialRoutes(app: FastifyInstance): Promise<void> 
 
   app.post<{ Params: { id: string } }>(
     '/api/friends/:id/accept',
-    { preHandler: [requireAuth, csrfGuard] },
+    { preHandler: [requireAuth, requireCsrf] },
     async (req) => {
       const user = currentUser(req);
       const { id } = idParams.parse(req.params);
@@ -80,7 +75,7 @@ export async function registerSocialRoutes(app: FastifyInstance): Promise<void> 
 
   app.delete<{ Params: { id: string } }>(
     '/api/friends/:id',
-    { preHandler: [requireAuth, csrfGuard] },
+    { preHandler: [requireAuth, requireCsrf] },
     async (req) => {
       const user = currentUser(req);
       const { id } = idParams.parse(req.params);
@@ -90,7 +85,7 @@ export async function registerSocialRoutes(app: FastifyInstance): Promise<void> 
     },
   );
 
-  app.post('/api/challenges', { preHandler: [requireAuth, csrfGuard] }, async (req) => {
+  app.post('/api/challenges', { preHandler: [requireAuth, requireCsrf] }, async (req) => {
     const user = currentUser(req);
     const payload = parseBody(challengeSchema, req.body);
     const db = getDb();

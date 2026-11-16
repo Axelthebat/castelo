@@ -16,11 +16,12 @@ import {
 } from '../lib/session.ts';
 import { requireAuth } from '../plugins/auth.ts';
 import { RATE_LIMITS } from '../plugins/rate-limit.ts';
-import { getUserStats, toPublicUser } from '../repos/games.ts';
+import { getUserStats } from '../repos/games.ts';
 import {
   consumePasswordReset,
   createPasswordReset,
   createUser,
+  toPublicUser,
   findPasswordReset,
   findUserByEmail,
   findUserByIdentifier,
@@ -65,8 +66,7 @@ export async function registerAuthRoutes(app: FastifyInstance): Promise<void> {
     setSessionCookie(reply, created.token, true);
 
     return reply.code(201).send({
-      user: toPublicUser(user, getUserStats(db, user.id)),
-      token: created.token,
+      user: { ...toPublicUser(user, getUserStats(db, user.id).perCategory), email: user.email },
       csrfToken: created.csrfToken,
     });
   });
@@ -81,12 +81,11 @@ export async function registerAuthRoutes(app: FastifyInstance): Promise<void> {
       throw new HttpError(401, 'credentials', 'Usuário ou senha inválidos');
     }
 
-    const created = createSession(db, { userId: user.id, ...sessionMeta(req), remember: data.remember });
-    setSessionCookie(reply, created.token, data.remember);
+    const created = createSession(db, { userId: user.id, ...sessionMeta(req), remember: data.remember ?? false });
+    setSessionCookie(reply, created.token, data.remember ?? false);
 
     return reply.send({
-      user: toPublicUser(user, getUserStats(db, user.id)),
-      token: created.token,
+      user: { ...toPublicUser(user, getUserStats(db, user.id).perCategory), email: user.email },
       csrfToken: created.csrfToken,
     });
   });
@@ -103,7 +102,7 @@ export async function registerAuthRoutes(app: FastifyInstance): Promise<void> {
     const user = req.currentUser!;
     const found = getSession(req, db);
     return {
-      user: toPublicUser(user, getUserStats(db, user.id)),
+      user: { ...toPublicUser(user, getUserStats(db, user.id).perCategory), email: user.email },
       csrfToken: found?.session.csrf_token ?? '',
     };
   });

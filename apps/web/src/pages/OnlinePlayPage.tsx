@@ -90,7 +90,7 @@ export default function OnlinePlayPage() {
         <Card className="p-8 text-center">
           <h1 className="text-2xl font-bold tracking-tight">Entre para jogar online</h1>
           <p className="mt-2 text-[var(--color-ink-muted)]">
-            A fila depareia você com alguém do mesmo nível. É preciso ter conta.
+            A fila te pareia com alguém do mesmo nível. Precisa de conta.
           </p>
           <Button to="/register" variant="primary" className="mt-6">
             Criar conta
@@ -104,7 +104,7 @@ export default function OnlinePlayPage() {
     <div className="mx-auto max-w-[52rem] px-5 py-10 lg:py-14">
       <h1 className="text-[2.1rem] font-bold tracking-[-0.02em]">Jogar online</h1>
       <p className="mt-2 max-w-[38rem] text-[var(--color-ink-muted)]">
-        Escolha o formato. O sistema te pareia com alguém dentro de 200 pontos de rating no mesmo
+        Escolha o formato. O pareamento busca alguém dentro de 200 pontos de rating no mesmo
         formato.
       </p>
 

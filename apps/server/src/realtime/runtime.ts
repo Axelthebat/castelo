@@ -74,7 +74,11 @@ export class GameRuntime {
   readonly registry = new GameRegistry();
   readonly bot = new BotService();
 
-  constructor(private db: DatabaseSync = getDb()) {}
+  private db: DatabaseSync;
+
+  constructor(db: DatabaseSync = getDb()) {
+    this.db = db;
+  }
 
   setDb(db: DatabaseSync): void {
     this.db = db;

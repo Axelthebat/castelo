@@ -44,6 +44,7 @@ export default function GamePage() {
         if (cancelled) return;
         setState(game);
         positionRef.current = new Position(game.fen);
+        getSocket().send({ type: 'game:subscribe', gameId: id });
       } catch {
         if (!cancelled) setNotice('Não foi possível carregar a partida.');
       }
@@ -294,7 +295,7 @@ export default function GamePage() {
                 className="flex items-center justify-center gap-1.5 rounded-md px-3 py-2 text-sm text-[var(--color-ink-muted)] transition-colors hover:bg-[var(--color-raised)] hover:text-[var(--color-ink)]"
               >
                 <Icon name="arrow-left" size={15} />
-                Voltar ao lobby
+                Voltar para jogar
               </Link>
             </div>
           </>

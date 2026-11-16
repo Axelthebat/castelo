@@ -1,77 +1,28 @@
-# Dependencies
+# Dependências
 node_modules/
-**/node_modules/
 
-# Environment variables and secrets
-.env
-.env.*
-!.env.example
-!.env.sample
-
-# Build outputs
+# Build
 dist/
-build/
-out/
-.next/
-.nuxt/
-.output/
-coverage/
+*.tsbuildinfo
+
+# Banco de dados local
+apps/server/data/
+*.db
+*.db-wal
+*.db-shm
+
+# Ambiente
+.env
+.env.local
+.env.*.local
 
 # Logs
 *.log
-logs/
 npm-debug.log*
-yarn-debug.log*
-pnpm-debug.log*
 
-# Cache
-.cache/
-.parcel-cache/
-.turbo/
-.eslintcache/
-.vite/
-
-# OS files
+# Editores e sistema operacional
 .DS_Store
-Thumbs.db
-desktop.ini
-
-# IDEs and editors
+.idea/
 .vscode/*
 !.vscode/extensions.json
-!.vscode/settings.json
-.idea/
 *.swp
-*.swo
-
-# Temporary files
-tmp/
-temp/
-*.tmp
-*.bak
-
-# Testing
-playwright-report/
-test-results/
-.nyc_output/
-
-# Runtime
-*.pid
-*.seed
-pids/
-
-# Local databases
-*.sqlite
-*.sqlite3
-*.db
-
-# Package manager
-.npm/
-.pnpm-store/
-
-# Deployment
-.vercel/
-.netlify/
-
-# TypeScript
-*.tsbuildinfo

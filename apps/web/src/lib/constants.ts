@@ -22,12 +22,6 @@ export const NAV_ITEMS: NavItem[] = [
     description: 'Treine sua tática com desafios daily',
   },
   {
-    label: 'Estudos',
-    to: '/learn',
-    icon: 'book',
-    description: 'Lições e abertura para todos os níveis',
-  },
-  {
     label: 'Ranking',
     to: '/leaderboard',
     icon: 'trophy',
@@ -89,7 +83,7 @@ export const BOT_DIFFICULTIES = [
   {
     id: 'strong',
     label: 'Forte',
-    description: 'Poucos erros, punish',
+    description: 'Poucos erros, e pune os seus deslizes',
     depth: 4,
   },
   {

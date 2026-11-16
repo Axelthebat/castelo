@@ -69,7 +69,10 @@ export class RealtimeHub {
   private readonly queues = new Map<string, QueueEntry[]>();
   private heartbeat: NodeJS.Timeout | null = null;
 
-  constructor(private readonly deps: HubDependencies) {
+  private readonly deps: HubDependencies;
+
+  constructor(deps: HubDependencies) {
+    this.deps = deps;
     this.wss = new WebSocketServer({ noServer: true });
     this.heartbeat = setInterval(() => this.pingAll(), 30_000);
     this.heartbeat.unref?.();
@@ -141,9 +144,15 @@ export class RealtimeHub {
           this.removeFromQueues(client.identity.id);
           this.send(client, { type: 'queue:left' });
           return;
+        case 'game:subscribe': {
+          const game = this.deps.registry.require(message.gameId);
+          this.ensureSubscription(client, game);
+          game.emit({ type: 'game:state', state: game.toState() });
+          return;
+        }
         case 'game:move': {
           const game = this.deps.registry.require(message.gameId);
-          this.requireSubscription(client, game);
+          this.ensureSubscription(client, game);
           const move = game.applyMove(
             client.identity.id,
             message.from,
@@ -157,32 +166,32 @@ export class RealtimeHub {
         }
         case 'game:resign': {
           const game = this.deps.registry.require(message.gameId);
-          this.requireSubscription(client, game);
+          this.ensureSubscription(client, game);
           game.resign(client.identity.id);
           this.finish(game);
           return;
         }
         case 'game:offer_draw': {
           const game = this.deps.registry.require(message.gameId);
-          this.requireSubscription(client, game);
+          this.ensureSubscription(client, game);
           game.offerDraw(client.identity.id);
           return;
         }
         case 'game:accept_draw': {
           const game = this.deps.registry.require(message.gameId);
-          this.requireSubscription(client, game);
+          this.ensureSubscription(client, game);
           if (game.acceptDraw(client.identity.id)) this.finish(game);
           return;
         }
         case 'game:rematch': {
           const game = this.deps.registry.require(message.gameId);
-          this.requireSubscription(client, game);
+          this.ensureSubscription(client, game);
           this.rematch(game, client);
           return;
         }
         case 'game:chat': {
           const game = this.deps.registry.require(message.gameId);
-          this.requireSubscription(client, game);
+          this.ensureSubscription(client, game);
           const text = message.text.slice(0, 500).trim();
           if (!text) return;
           game.addChat(client.identity.id, text);
@@ -361,10 +370,16 @@ export class RealtimeHub {
     client.unsubscribe = unsubscribe;
   }
 
-  private requireSubscription(client: Client, game: LiveGame): void {
-    if (client.gameId !== game.id) {
-      throw new GameError('not-subscribed', 'Você não está nesta partida.', 403);
+  /**
+   * Garante que o socket receba os eventos da partida. Só participantes
+   * assistem — o chat e o estado são privados da partida.
+   */
+  private ensureSubscription(client: Client, game: LiveGame): void {
+    if (client.gameId === game.id) return;
+    if (!game.playerOf(client.identity.id)) {
+      throw new GameError('forbidden', 'Você não participa desta partida.', 403);
     }
+    this.subscribe(client, game);
   }
 
   private detach(client: Client): void {

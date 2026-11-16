@@ -30,7 +30,10 @@ export async function registerMiscRoutes(app: FastifyInstance): Promise<void> {
   app.get('/leaderboard', { config: rl }, async (req) => {
     const db = getDb();
     const query = parseQuery(leaderboardQuerySchema, req.query);
-    return getLeaderboard(db, query.category, { page: query.page, pageSize: query.pageSize });
+    return getLeaderboard(db, query.category ?? 'blitz', {
+      page: query.page ?? 1,
+      pageSize: query.pageSize ?? 25,
+    });
   });
 
   app.get('/puzzles/rating', { preHandler: [requireAuth], config: rl }, async (req) => {
@@ -44,7 +47,7 @@ export async function registerMiscRoutes(app: FastifyInstance): Promise<void> {
     const body = parseBody(puzzleAttemptSchema, req.body);
     const user = req.currentUser!;
 
-    const update = computePuzzleRating(db, user.id, body.puzzleRating, body.solved);
+    const update = computePuzzleRating(db, user.id, body.puzzleRating ?? 1200, body.solved ?? false);
     recordAttempt(db, {
       userId: user.id,
       puzzleId: id,

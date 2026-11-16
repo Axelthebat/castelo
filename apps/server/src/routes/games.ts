@@ -1,15 +1,11 @@
-import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
+import type { FastifyInstance, FastifyRequest } from 'fastify';
 import { z } from 'zod';
 import { HttpError } from '../errors.ts';
 import { parseBody } from '../lib/validate.ts';
 import { requireAuth } from '../plugins/auth.ts';
 import { requireCsrf } from '../lib/csrf.ts';
-
-/** O hook do Fastify recebe (req, reply, done); o guard do CSRF usa (req, reply). */
-const csrfGuard = async (req: FastifyRequest, reply: FastifyReply): Promise<void> => {
-  await requireCsrf(req, reply);
-};
 import { getDb } from '../db/index.ts';
+import { getSession } from '../lib/session.ts';
 import { getGame, getGamePgn } from '../repos/games.ts';
 import { getRuntime, parseTimeControl } from '../realtime/runtime.ts';
 import { categoryForTimeControl } from '../repos/games.ts';
@@ -39,8 +35,8 @@ export async function registerGamesRoutes(app: FastifyInstance): Promise<void> {
 
     const live = runtime.registry.get(id);
     if (live) {
-      const session = req.currentUser;
-      const participant = session && live.playerOf(session.id);
+      const session = getSession(req);
+      const participant = session ? live.playerOf(session.user.id) : null;
       const state = live.toState();
       if (!participant) {
         // um espectador só vê o essencial
@@ -96,7 +92,7 @@ export async function registerGamesRoutes(app: FastifyInstance): Promise<void> {
     return { pgn };
   });
 
-  app.post('/api/games/bot', { preHandler: [requireAuth, csrfGuard] }, async (req) => {
+  app.post('/api/games/bot', { preHandler: [requireAuth, requireCsrf] }, async (req) => {
     const user = currentUser(req);
     const payload = parseBody(createBotSchema, req.body);
     const timeControl = parseTimeControl(payload.timeControl);
@@ -118,7 +114,7 @@ export async function registerGamesRoutes(app: FastifyInstance): Promise<void> {
 
   app.post<{ Params: { id: string } }>(
     '/api/games/:id/move',
-    { preHandler: [requireAuth, csrfGuard], config: { rateLimit: { max: 120, timeWindow: '1 minute' } } },
+    { preHandler: [requireAuth, requireCsrf], config: { rateLimit: { max: 120, timeWindow: '1 minute' } } },
     async (req) => {
       const user = currentUser(req);
       const { id } = idParams.parse(req.params);
@@ -143,7 +139,7 @@ export async function registerGamesRoutes(app: FastifyInstance): Promise<void> {
 
   app.post<{ Params: { id: string } }>(
     '/api/games/:id/resign',
-    { preHandler: [requireAuth, csrfGuard] },
+    { preHandler: [requireAuth, requireCsrf] },
     async (req) => {
       const user = currentUser(req);
       const { id } = idParams.parse(req.params);

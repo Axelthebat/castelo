@@ -55,12 +55,14 @@ export interface GameSnapshotRow {
 export type GameListener = (message: ServerMessage) => void;
 
 export class GameError extends Error {
-  constructor(
-    readonly code: string,
-    message: string,
-    readonly status = 400,
-  ) {
+  code: string;
+  status: number;
+
+  constructor(code: string, message: string, status = 400) {
     super(message);
+    this.name = 'GameError';
+    this.code = code;
+    this.status = status;
   }
 }
 

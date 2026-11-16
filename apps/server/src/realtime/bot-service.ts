@@ -9,16 +9,22 @@ import type { LiveGame } from './game-service.ts';
 export class BotService {
   private readonly timers = new Map<string, NodeJS.Timeout>();
 
-  constructor(
-    private readonly options: {
-      /** Atraso mínimo antes de o bot responder, para parecer humano. */
-      minDelayMs?: number;
-      /** Atraso máximo. */
-      maxDelayMs?: number;
-      /** Desliga o bot (útil em testes). */
-      enabled?: boolean;
-    } = {},
-  ) {}
+  private readonly options: {
+    /** Atraso mínimo antes de o bot responder, para parecer humano. */
+    minDelayMs?: number;
+    /** Atraso máximo. */
+    maxDelayMs?: number;
+    /** Desliga o bot (útil em testes). */
+    enabled?: boolean;
+  };
+
+  constructor(options: {
+    minDelayMs?: number;
+    maxDelayMs?: number;
+    enabled?: boolean;
+  } = {}) {
+    this.options = options;
+  }
 
   private difficultyOf(game: LiveGame): BotDifficulty {
     return (game.botDifficulty ?? 'casual') as BotDifficulty;

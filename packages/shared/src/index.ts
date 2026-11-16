@@ -323,6 +323,7 @@ export interface Friend {
  * ------------------------------------------------------------------ */
 
 export type ClientMessage =
+  | { type: 'game:subscribe'; gameId: string }
   | { type: 'queue:join'; timeControl: string }
   | { type: 'queue:leave' }
   | { type: 'game:move'; gameId: string; from: string; to: string; promotion?: string }

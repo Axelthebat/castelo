@@ -1,6 +1,7 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './app/App.tsx';
+import '@fontsource-variable/space-grotesk';
 import './styles/app.css';
 
 const container = document.getElementById('root');

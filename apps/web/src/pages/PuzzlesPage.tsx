@@ -109,7 +109,7 @@ export default function PuzzlesPage() {
         <EmptyState
           icon={<Icon name="target" />}
           title="Entre para treinar tática"
-          description="Problemas adjusts o seu nível automaticamente com base nos acertos e erros."
+          description="O nível se ajusta sozinho, com base nos seus acertos e erros."
           action={
             <Button to="/register" variant="primary">
               Criar conta
@@ -159,8 +159,7 @@ export default function PuzzlesPage() {
       <div className="mx-auto w-full max-w-[32rem]">
         <h1 className="text-[2rem] font-bold tracking-[-0.02em]">Problemas</h1>
         <p className="mt-2 text-[var(--color-ink-muted)]">
-          Encontre o lance. Se errar, a posição volta ao início — é assim que a repetição fixa o
-          padrão.
+          Encontre o lance. Errou? A posição volta ao início — repetir é o que fixa o padrão.
         </p>
 
         {puzzle && (
@@ -233,7 +232,7 @@ export default function PuzzlesPage() {
                 Não foi desta vez
               </p>
               <p className="mt-1 text-sm text-[var(--color-ink-muted)]">
-                Reveja a posição e tente de novo — o erro ensina mais que o acerto.
+                Reveja a posição e tente de novo. O lance certo aparece depois da tentativa.
               </p>
               <div className="mt-4 flex gap-2">
                 <Button variant="secondary" onClick={() => setSolved(null)}>

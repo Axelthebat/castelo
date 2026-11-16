@@ -129,7 +129,7 @@ export default function SettingsPage() {
         <div>
           <h1 className="text-[2.1rem] font-bold tracking-[-0.02em]">Configurações</h1>
           <p className="mt-2 text-[var(--color-ink-muted)]">
-            Preferências de tabuleiro, som e conta. Salvas na sua conta.
+            Preferências de tabuleiro, som e conta. Tudo fica salvo.
           </p>
         </div>
         {savedAt && (

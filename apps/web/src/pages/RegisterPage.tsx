@@ -47,7 +47,7 @@ export default function RegisterPage() {
       <div className="rounded-lg bg-[var(--color-surface)] p-6 sm:p-8">
         <h1 className="text-2xl font-bold tracking-tight">Criar conta</h1>
         <p className="mt-1 text-sm text-[var(--color-ink-muted)]">
-          Um nome de usuário, um e-mail e pronto para jogar.
+          Nome de usuário, e-mail e senha. Prontos para jogar.
         </p>
 
         {error && (

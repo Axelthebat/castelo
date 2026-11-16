@@ -30,7 +30,7 @@ export default function BotPlayPage() {
         <Card className="p-8 text-center">
           <h1 className="text-2xl font-bold tracking-tight">Entre para enfrentar o bot</h1>
           <p className="mt-2 text-[var(--color-ink-muted)]">
-            As partidas contra o bot também contam para o seu histórico e rating.
+            As partidas contra o bot entram no seu histórico e podem ser revisadas lance a lance.
           </p>
           <Button to="/register" variant="primary" className="mt-6">
             Criar conta
@@ -44,7 +44,7 @@ export default function BotPlayPage() {
     <div className="mx-auto max-w-[52rem] px-5 py-10 lg:py-14">
       <h1 className="text-[2.1rem] font-bold tracking-[-0.02em]">Enfrentar o bot</h1>
       <p className="mt-2 max-w-[38rem] text-[var(--color-ink-muted)]">
-        O bot roda no servidor com busca alfa-beta de verdade — não é um lance aleatório.
+        O bot roda no servidor, com busca alfa-beta de verdade. Não é lance aleatório.
       </p>
 
       <section className="mt-8">
@@ -115,7 +115,7 @@ export default function BotPlayPage() {
         onClick={() => create.mutate()}
       >
         <Icon name="bot" size={18} />
-        Começar partida
+        Começar a partida
       </Button>
     </div>
   );

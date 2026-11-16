@@ -105,7 +105,7 @@ export function MoveList({ moves, onSelect }: { moves: string[]; onSelect?: (ply
   if (moves.length === 0) {
     return (
       <p className="px-4 py-8 text-center text-sm text-[var(--color-ink-faint)]">
-        Os lances aparecem aqui assim que a partida começa.
+        Os lances aparecem aqui quando a partida começa.
       </p>
     );
   }
@@ -174,7 +174,7 @@ export function GameChat({
       <div className="flex-1 space-y-2 overflow-y-auto px-4 py-3">
         {lines.length === 0 ? (
           <p className="text-sm text-[var(--color-ink-faint)]">
-            Envie uma mensagem para o adversário. Ela é visível só nesta partida.
+            A mensagem é visível só nesta partida.
           </p>
         ) : (
           lines.map((line, index) => (

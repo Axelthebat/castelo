@@ -133,13 +133,6 @@ const PST: Record<PieceType, number[]> = {
   ],
 };
 
-/** Índice da tabela para uma casa (a8 primeiro). */
-function squareIndex(square: string): number {
-  const file = square.charCodeAt(0) - 97;
-  const rank = Number(square[1]);
-  return (8 - rank) * 8 + file;
-}
-
 /* ------------------------------------------------------------------ *
  * Avaliação
  * ------------------------------------------------------------------ */

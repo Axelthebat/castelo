@@ -21,14 +21,14 @@ const OPTIONS: Option[] = [
   {
     to: '/play/bot',
     title: 'Enfrentar o bot',
-    description: 'Do aprendiz que erra até o mestre que não perdoa.',
+    description: 'Do aprendiz que erra até o mestre que castiga.',
     icon: 'bot',
     cta: 'Escolher nível',
   },
   {
     to: '/puzzles',
     title: 'Treinar tática',
-    description: 'Posições curtas para afiar o seu cálculo.',
+    description: 'Posições curtas para treinar o cálculo.',
     icon: 'target',
     cta: 'Resolver problemas',
   },
@@ -46,7 +46,7 @@ export default function PlayPage() {
     <div className="mx-auto max-w-[70rem] px-5 py-10 lg:py-14">
       <h1 className="text-[2.1rem] font-bold tracking-[-0.02em]">Jogar</h1>
       <p className="mt-2 max-w-[36rem] text-[var(--color-ink-muted)]">
-        Toda partida é jogada no servidor: as regras são aplicadas lá, e o resultado nunca depende do
+        As regras são aplicadas no servidor. O resultado de uma partida nunca depende do
         navegador.
       </p>
 
@@ -86,7 +86,7 @@ export default function PlayPage() {
           <span>
             <span className="block font-medium">Histórico de partidas</span>
             <span className="block text-sm text-[var(--color-ink-muted)]">
-              Revise e analise tudo que você já jogou
+              Reveja qualquer lance do seu histórico
             </span>
           </span>
         </Link>

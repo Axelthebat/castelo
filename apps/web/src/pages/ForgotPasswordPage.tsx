@@ -36,8 +36,9 @@ export default function ForgotPasswordPage() {
           <>
             <h1 className="text-2xl font-bold tracking-tight">Verifique seu e-mail</h1>
             <p className="mt-2 text-sm text-[var(--color-ink-muted)]">
-              Se existir uma conta para <strong className="text-[var(--color-ink)]">{email}</strong>,
-              você receberá um link para redefinir a senha em instantes.
+              Se existir uma conta com o e-mail{' '}
+              <strong className="text-[var(--color-ink)]">{email}</strong>, o link de redefinição
+              chega em instantes.
             </p>
             <Button to="/login" variant="secondary" fullWidth className="mt-6">
               Voltar para o login
@@ -47,7 +48,7 @@ export default function ForgotPasswordPage() {
           <>
             <h1 className="text-2xl font-bold tracking-tight">Recuperar senha</h1>
             <p className="mt-1 text-sm text-[var(--color-ink-muted)]">
-              Informe o e-mail da sua conta e enviaremos as instruções.
+              Informe o e-mail da conta. Enviamos o link de redefinição.
             </p>
             <form className="mt-6 flex flex-col gap-4" onSubmit={handleSubmit} noValidate>
               <Input

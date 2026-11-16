@@ -120,6 +120,10 @@ export async function registerUserRoutes(app: FastifyInstance): Promise<void> {
       opponentId = opponent.id;
     }
 
-    return listUserGames(db, user.id, { page: query.page, pageSize: query.pageSize, opponentId });
+    return listUserGames(db, user.id, {
+      page: query.page ?? 1,
+      pageSize: query.pageSize ?? 25,
+      opponentId,
+    });
   });
 }

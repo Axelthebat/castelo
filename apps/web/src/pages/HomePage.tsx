@@ -23,7 +23,7 @@ const PLAY_OPTIONS: PlayOption[] = [
   {
     to: '/play/bot',
     title: 'Contra o bot',
-    description: 'Quatro níveis, do aprendiz que erra ao mestre que castiga.',
+    description: 'Quatro níveis, do aprendiz que erra até o mestre que castiga.',
     icon: 'bot',
     span: 'lg:col-span-5',
   },
@@ -71,16 +71,16 @@ export default function HomePage() {
       <section className="mx-auto grid max-w-[76rem] items-center gap-10 px-5 py-14 lg:grid-cols-12 lg:gap-12 lg:py-20">
         <div className="lg:col-span-5">
           <h1 className="text-[2.6rem] font-bold leading-[1.02] tracking-[-0.03em] sm:text-[3.4rem] lg:text-[3.6rem]">
-            Jogue xadrez sério, todos os dias
+            Xadrez online, sem enrolação
           </h1>
           <p className="mt-5 max-w-[34rem] text-[1.05rem] leading-relaxed text-[var(--color-ink-muted)]">
-            Partidas rápidas, relógio justo e histórico completo. O tabuleiro ao lado é real — clique
-            numa peça e mova.
+            Partidas rápidas, relógio justo e histórico completo para revisar cada lance. O
+            tabuleiro ao lado é real: clique numa peça e mova.
           </p>
           <div className="mt-8 flex flex-wrap items-center gap-3">
             {user ? (
               <Button to="/play" variant="primary" size="lg">
-                Ir para o tabuleiro
+                Ir para jogar
               </Button>
             ) : (
               <>
@@ -106,7 +106,7 @@ export default function HomePage() {
           Quatro jeitos de jogar
         </h2>
         <p className="mt-2 max-w-[40rem] text-[var(--color-ink-muted)]">
-          Comece por qualquer um. O resto continua disponível.
+          Escolha por onde começar. As outras opções continuam aqui.
         </p>
 
         <div className="mt-8 grid gap-3 lg:grid-cols-12">
@@ -200,8 +200,8 @@ export default function HomePage() {
             <div className="max-w-[22rem]">
               <span className="text-lg font-bold tracking-tight">Castelo</span>
               <p className="mt-2 text-sm leading-relaxed text-[var(--color-ink-faint)]">
-                Uma plataforma de xadrez open source. Sem anúncios, sem rastreamento, com as regras
-                aplicadas no servidor.
+                Plataforma de xadrez open source. Sem anúncios, sem rastreamento, e com as
+                regras aplicadas no servidor.
               </p>
             </div>
             <nav aria-label="Rodapé" className="grid grid-cols-2 gap-x-10 gap-y-2 text-sm">

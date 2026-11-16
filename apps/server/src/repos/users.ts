@@ -1,4 +1,4 @@
-import type { DatabaseSync } from 'node:sqlite';
+import type { DatabaseSync, SQLInputValue } from 'node:sqlite';
 import type { GameStats, PublicUser, RatingCategory, RatingSet } from '@castelo/shared';
 import { newId } from '../lib/ids.ts';
 import { nowIso } from '../lib/time.ts';
@@ -138,7 +138,7 @@ export function updateUserProfile(db: DatabaseSync, id: string, patch: ProfilePa
   if (entries.length === 0) return findUserById(db, id);
 
   const clauses: string[] = [];
-  const params: unknown[] = [];
+  const params: SQLInputValue[] = [];
   for (const [key, value] of entries) {
     clauses.push(`${PROFILE_COLUMN_MAP[key as keyof ProfilePatch]} = ?`);
     params.push(value);
@@ -176,7 +176,7 @@ export function updateUserRatings(db: DatabaseSync, id: string, patch: RatingsPa
   const entries = Object.entries(patch).filter(([, value]) => value !== undefined);
   if (entries.length === 0) return findUserById(db, id);
   const clauses: string[] = [];
-  const params: unknown[] = [];
+  const params: SQLInputValue[] = [];
   for (const [key, value] of entries) {
     clauses.push(`${RATING_COLUMN_MAP[key as keyof RatingsPatch]} = ?`);
     params.push(value);
@@ -229,8 +229,9 @@ export function updateSettings(db: DatabaseSync, userId: string, patch: Settings
   );
   if (entries.length > 0) {
     const clauses: string[] = [];
-    const params: unknown[] = [];
+    const params: SQLInputValue[] = [];
     for (const [key, value] of entries) {
+      if (value === undefined) continue;
       clauses.push(`${SETTINGS_COLUMN_MAP[key]} = ?`);
       params.push(typeof value === 'boolean' ? (value ? 1 : 0) : value);
     }

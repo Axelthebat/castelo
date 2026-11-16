@@ -85,7 +85,7 @@ export default function FriendsPage() {
     <div className="mx-auto max-w-[62rem] px-5 py-10 lg:py-14">
       <h1 className="text-[2.1rem] font-bold tracking-[-0.02em]">Amigos</h1>
       <p className="mt-2 max-w-[36rem] text-[var(--color-ink-muted)]">
-        Adicione jogadores pelo nome de usuário para convidá-los para partidas.
+        Busque um jogador pelo nome de usuário e convide para uma partida.
       </p>
 
       <form onSubmit={handleSubmit} className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-end">
@@ -221,7 +221,7 @@ export default function FriendsPage() {
                   <li key={friend.id} className="flex items-center gap-4 p-4">
                     <Avatar seed={friend.username} size={40} />
                     <span className="min-w-0 flex-1 truncate font-medium">{friend.username}</span>
-                    <span className="text-xs text-[var(--color-ink-faint)]">aguardando</span>
+                    <span className="text-xs text-[var(--color-ink-faint)]">Aguardando resposta</span>
                     <Button size="sm" variant="ghost" onClick={() => remove.mutate(friend.id)}>
                       Cancelar
                     </Button>

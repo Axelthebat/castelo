@@ -25,9 +25,11 @@ test('auth: register → me → login → wrong password → CSRF → logout', a
     assert.equal(registerRes.statusCode, 201);
     const registerBody = registerRes.json();
     assert.equal(registerBody.user.username, 'carlos');
-    assert.ok(registerBody.token);
+    // O token cru da sessão NÃO volta no corpo: ele vive só no cookie HttpOnly.
+    assert.equal(registerBody.token, undefined);
     assert.ok(registerBody.csrfToken);
     const registerCookie = cookieOf(registerRes, 'castelo_session');
+    assert.ok(registerCookie.value.length > 20);
     const registerCookieHeader = `castelo_session=${registerCookie.value}`;
 
     // 2) me
@@ -67,8 +69,11 @@ test('auth: register → me → login → wrong password → CSRF → logout', a
       payload: { identifier: 'carlos', password: PASSWORD },
     });
     assert.equal(loginRes.statusCode, 200);
-    assert.ok(loginRes.json().token);
+    // Mesmo no login: o token cru fica no cookie, não no corpo da resposta.
+    assert.equal(loginRes.json().token, undefined);
+    assert.ok(loginRes.json().csrfToken);
     const loginCookie = cookieOf(loginRes, 'castelo_session');
+    assert.ok(loginCookie.value.length > 20);
     const loginHeader = `castelo_session=${loginCookie.value}`;
     const loginCsrf = loginRes.json().csrfToken;
 

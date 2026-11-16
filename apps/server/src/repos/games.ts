@@ -1,4 +1,4 @@
-import type { DatabaseSync } from 'node:sqlite';
+import type { DatabaseSync, SQLInputValue } from 'node:sqlite';
 import type { GamePlayer, GameStats, GameSummary, RatingCategory } from '@castelo/shared';
 import { timeControlOptions } from '@castelo/shared';
 import { scoreForResult } from '../lib/elo.ts';
@@ -190,8 +190,8 @@ export function listUserGames(
   const opponentWhere = options.opponentId
     ? ` AND ((g.white_id = ? AND g.black_id = ?) OR (g.white_id = ? AND g.black_id = ?))`
     : '';
-  const baseParams: unknown[] = [userId, userId];
-  const opponentParams: unknown[] = options.opponentId
+  const baseParams: SQLInputValue[] = [userId, userId];
+  const opponentParams: SQLInputValue[] = options.opponentId
     ? [options.opponentId, userId, userId, options.opponentId]
     : [];
 
@@ -215,7 +215,7 @@ export function listUserGames(
        ORDER BY COALESCE(g.ended_at, g.created_at) DESC
        LIMIT ? OFFSET ?`,
     )
-    .all(...baseParams, ...opponentParams, pageSize, offset) as GameJoinRow[];
+    .all(...baseParams, ...opponentParams, pageSize, offset) as unknown as GameJoinRow[];
 
   const items = rows.map((row) => {
     const category = categoryForTimeControl(row.time_control);

@@ -4,7 +4,7 @@
  * e síncrono; esta implementação não faz I/O).
  */
 
-export type GameResult = '1-0' | '0-1' | '1/2-1/2';
+export type GameResult = '1-0' | '0-1' | '1/2-1/2' | '*';
 
 export function expectedScore(rating: number, opponentRating: number): number {
   return 1 / (1 + 10 ** ((opponentRating - rating) / 400));
