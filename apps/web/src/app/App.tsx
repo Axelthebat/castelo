@@ -11,6 +11,7 @@ const OnlinePlayPage = lazy(() => import('../pages/OnlinePlayPage.tsx'));
 const BotPlayPage = lazy(() => import('../pages/BotPlayPage.tsx'));
 const GamePage = lazy(() => import('../pages/GamePage.tsx'));
 const PuzzlesPage = lazy(() => import('../pages/PuzzlesPage.tsx'));
+const LearnPage = lazy(() => import('../pages/LearnPage.tsx'));
 const LeaderboardPage = lazy(() => import('../pages/LeaderboardPage.tsx'));
 const ProfilePage = lazy(() => import('../pages/ProfilePage.tsx'));
 const GamesPage = lazy(() => import('../pages/GamesPage.tsx'));
@@ -54,6 +55,7 @@ export default function App() {
                 <Route path="/play/bot" element={<BotPlayPage />} />
                 <Route path="/game/:id" element={<GamePage />} />
                 <Route path="/puzzles" element={<PuzzlesPage />} />
+                <Route path="/learn" element={<LearnPage />} />
                 <Route path="/leaderboard" element={<LeaderboardPage />} />
                 <Route path="/profile/:username" element={<ProfilePage />} />
                 <Route path="/games" element={<GamesPage />} />

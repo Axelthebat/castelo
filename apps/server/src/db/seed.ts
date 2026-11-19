@@ -20,6 +20,34 @@ import { findFriendshipBetween } from '../repos/friends.ts';
 
 export const SEED_PASSWORD = 'Castelo#2026!';
 
+function seedPuzzles(db: DatabaseSync): number {
+  const file = fileURLToPath(new URL('./puzzles.json', import.meta.url));
+  const puzzles = JSON.parse(readFileSync(file, 'utf8')) as Array<{
+    id: string; fen: string; moves: unknown; rating: number;
+    ratingDeviation: number; popularity: number; themes: string[]; title: string;
+  }>;
+  let count = 0;
+  for (const puzzle of puzzles) {
+    const exists = db.prepare('SELECT id FROM puzzles WHERE id = ?').get(puzzle.id);
+    if (exists) continue;
+    db.prepare(
+      `INSERT INTO puzzles (id, fen, moves, rating, rating_deviation, popularity, themes, title)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+    ).run(
+      puzzle.id,
+      puzzle.fen,
+      JSON.stringify(puzzle.moves),
+      puzzle.rating,
+      puzzle.ratingDeviation,
+      puzzle.popularity,
+      JSON.stringify(puzzle.themes),
+      puzzle.title,
+    );
+    count += 1;
+  }
+  return count;
+}
+
 interface SeedGameData {
   id: string;
   timeControl: string;
@@ -226,8 +254,9 @@ export function runSeed(db: DatabaseSync): SeedSummary {
   }
 
   const friendshipCount = seedFriendships(db, users);
+  const puzzleCount = seedPuzzles(db);
 
-  const summary = { users: userCount, games: gameCount, friendships: friendshipCount };
+  const summary = { users: userCount, games: gameCount, friendships: friendshipCount, puzzles: puzzleCount };
   logger.info('Seed concluído', summary);
   return summary;
 }

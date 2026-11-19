@@ -84,9 +84,9 @@ com traço e geometria consistentes, em vez de reaproveitar um conjunto de terce
 npm, em vez do CDN do Google Fonts. Isso remove uma requisição a terceiros, funciona offline e
 mantém a CSP em `font-src 'self'`.
 
-**Item "Estudos" removido da navegação.** A página de lições não existe ainda, e apontar o menu
-para uma rota inexistente seria pior do que não oferecer a opção. O item volta junto com o
-conteúdo, sem dados fictícios no lugar.
+**Página "Estudos".** Voltou à navegação com quatro aberturas reais (Italiana, Siciliana,
+Gambito da Dama e Caro-Kann). Cada sequência foi validada lance a lance com chess.js antes de
+entrar no código, e as posições exibidas são geradas pelo engine. Não há conteúdo fictício.
 
 ## Tabuleiro
 
@@ -119,3 +119,42 @@ limite de uso do modelo antes de concluir. O motor foi reimplementado e validado
 (17 testes); o servidor e a interface foram finalizados manualmente sobre o que os agentes já
 tinham escrito. O rascunho de 1.544 linhas do motor produzido pelo subagente foi mantido em
 `/tmp` para comparação e não foi adotado, por não estar coberto por testes.
+
+## Problemas de xadrez
+
+**Catálogo real no banco, não dados fixos no cliente.** A tabela `puzzles` guarda 12 posições com
+solução em UCI. Todas as sequências foram geradas e conferidas com `chess.js`: cada uma termina em
+xeque-mate e todos os lances são legais na posição. O seed é idempotente.
+
+**O servidor decide se o problema foi resolvido.** O cliente envia só as jogadas (`moves` em UCI);
+`checkPuzzleSolution()` compara com a solução gravada e `computePuzzleRating()` aplica o rating.
+Antes, a rota aceitava `solved` do cliente — o que permitiria forçar um acerto.
+
+## Análise e convites
+
+**Replay fora do painel estreito.** A primeira versão colocava o replay dentro do painel de 20rem
+da partida e as duas colunas se sobrepunham. Partidas encerradas agora ocupam a largura da página,
+com navegação por setas do teclado e PGN copiável.
+
+**Convites aceitos viram partida real.** `POST /api/challenges/:id/accept` cria a partida no runtime
+com o controle de tempo do convite e devolve o `gameId`; a interface navega para ela. Recusar marca o
+convite como `declined`.
+
+**IDs de partida não são só UUID.** As partidas do seed usam slugs (`seed-game-scholar`). A validação
+de parâmetros aceita `[a-zA-Z0-9_-]`, e erros de Zod dentro dos handlers passaram a responder 400 em
+vez de 500.
+
+## Interface
+
+**Movimento com transform e opacity.** Entrada de página, pressão de botão, deslizamento de peças e
+atualização das anotações das lições. `prefers-reduced-motion` desliga os deslocamentos.
+
+**Som sintetizado.** Web Audio gera os tons de lance, captura, xeque, fim e lance inválido. Nenhum
+arquivo de áudio entra no repositório, e o volume respeita a configuração salva.
+
+**Diagrama SVG da arquitetura.** `docs/assets/arquitetura.svg` segue as convenções da skill
+svg-diagram (espaçamento mínimo de 25px, setas com `markerUnits`, posteriores em primeiro lugar,
+fonte CJK declarada). Validado com `svg-lint`: 0 erros e 0 avisos.
+
+**Estudos com linhas verificadas.** As quatro aberturas foram checadas lance a lance com chess.js
+antes de entrar no código; as posições exibidas vêm do engine, não de FEN copiado.

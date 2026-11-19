@@ -6,7 +6,15 @@ import { requireAuth } from '../plugins/auth.ts';
 import { requireCsrf } from '../lib/csrf.ts';
 import { getDb } from '../db/index.ts';
 import { getSession } from '../lib/session.ts';
-import { getGame, getGamePgn } from '../repos/games.ts';
+import { getGame, getGamePgn, parseMoves } from '../repos/games.ts';
+
+function parseStoredMoves(raw: string): ReturnType<typeof parseMoves> {
+  try {
+    return parseMoves(raw);
+  } catch {
+    return [];
+  }
+}
 import { getRuntime, parseTimeControl } from '../realtime/runtime.ts';
 import { categoryForTimeControl } from '../repos/games.ts';
 import { GameError } from '../realtime/game-service.ts';
@@ -21,7 +29,8 @@ const moveSchema = z.object({
   promotion: z.enum(['q', 'r', 'b', 'n']).optional(),
 });
 
-const idParams = z.object({ id: z.string().uuid() });
+// IDs de partidas criadas pelo seed são slugs (seed-game-scholar), não UUIDs.
+const idParams = z.object({ id: z.string().min(1).max(64).regex(/^[a-zA-Z0-9_-]+$/) });
 
 function currentUser(req: FastifyRequest) {
   if (!req.currentUser) throw new HttpError(401, 'unauthorized', 'Autentique-se para continuar');
@@ -82,6 +91,26 @@ export async function registerGamesRoutes(app: FastifyInstance): Promise<void> {
       },
       moves: [],
       lastMove: null,
+    };
+  });
+
+  app.get<{ Params: { id: string } }>('/api/games/:id/moves', async (req) => {
+    const { id } = idParams.parse(req.params);
+    const runtime = getRuntime();
+    const live = runtime.registry.get(id);
+
+    const history = live?.moves ?? parseStoredMoves(getGame(getDb(), id)?.moves ?? '[]');
+    return {
+      moves: history.map((move, index) => ({
+        ply: index + 1,
+        san: move.san,
+        from: move.from,
+        to: move.to,
+        promotion: move.promotion,
+        fen: 'fen' in move ? move.fen : '',
+        clockWhite: 0,
+        clockBlack: 0,
+      })),
     };
   });
 

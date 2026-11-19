@@ -1,11 +1,15 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Position, type MoveInfo } from '@castelo/engine';
-import type { GameState, ServerMessage } from '@castelo/shared';
+import type { GameMove, GameState, ServerMessage } from '@castelo/shared';
 import { getSocket } from '../lib/socket.ts';
+import { playSound } from '../lib/sound.ts';
+import { useQuery } from '@tanstack/react-query';
+import { api } from '../lib/api.ts';
 import { useAuth } from '../lib/auth.tsx';
 import { ChessBoard } from '../components/board/ChessBoard.tsx';
-import { GameChat, GameOverPanel, MoveList, PlayerBar, type ChatLine } from '../components/game/GamePanels.tsx';
+import { GameChat, MoveList, PlayerBar, type ChatLine } from '../components/game/GamePanels.tsx';
+import { GameReplay } from '../components/game/Replay.tsx';
 import { Button } from '../components/ui/Button.tsx';
 import { Spinner } from '../components/ui/Spinner.tsx';
 import { Icon } from '../components/icons.tsx';
@@ -25,6 +29,21 @@ export default function GamePage() {
   const [chat, setChat] = useState<ChatLine[]>([]);
   const [notice, setNotice] = useState<string | null>(null);
   const [now, setNow] = useState(() => Date.now());
+  const [reviewMoves, setReviewMoves] = useState<GameMove[]>([]);
+  const [reviewPgn, setReviewPgn] = useState<string | null>(null);
+
+  const settings = useQuery({
+    queryKey: ['settings'],
+    queryFn: ({ signal }) => api.settings(signal),
+    enabled: Boolean(user),
+  });
+  const soundRef = useRef({ enabled: false, volume: 60 });
+  soundRef.current = {
+    enabled: settings.data?.soundEnabled ?? false,
+    volume: settings.data?.soundVolume ?? 60,
+  };
+  const sound = (kind: 'move' | 'capture' | 'check' | 'end' | 'invalid') =>
+    playSound(kind, soundRef.current.enabled, soundRef.current.volume);
 
   const positionRef = useRef<Position | null>(null);
 
@@ -87,17 +106,21 @@ export default function GamePage() {
             : previous,
         );
         positionRef.current = new Position(message.move.fen);
+        const san = message.move.san;
+        sound(san.includes('#') || san.includes('+') ? 'check' : san.includes('x') ? 'capture' : 'move');
         setSelected(null);
         setLegalTargets([]);
       } else if (message.type === 'game:chat') {
         setChat((previous) => [...previous, { from: message.from, text: message.text, at: message.at }]);
       } else if (message.type === 'game:ended') {
+        sound('end');
         setState((previous) =>
           previous
             ? { ...previous, status: 'finished', result: message.result, termination: message.reason }
             : previous,
         );
       } else if (message.type === 'error') {
+        sound('invalid');
         setNotice(message.message);
       }
     });
@@ -107,6 +130,26 @@ export default function GamePage() {
       offMessage();
     };
   }, []);
+
+  /* ----------------------------- revisão ----------------------------- */
+
+  useEffect(() => {
+    if (state?.status !== 'finished') return;
+    let cancelled = false;
+    void import('../lib/api.ts').then(async ({ api }) => {
+      try {
+        const [moves, pgn] = await Promise.all([api.gameMoves(id), api.gamePgn(id)]);
+        if (cancelled) return;
+        setReviewMoves(moves.moves);
+        setReviewPgn(pgn.pgn);
+      } catch {
+        if (!cancelled) setReviewPgn(null);
+      }
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [state?.status, id]);
 
   /* ------------------------------- relógio ------------------------------- */
 
@@ -198,6 +241,23 @@ export default function GamePage() {
   const bottomColor = myColor === 'b' ? 'w' : 'b';
   const finished = state.status === 'finished';
 
+  // A revisão ocupa a página inteira: o replay tem duas colunas próprias.
+  if (finished) {
+    return (
+      <div className="mx-auto max-w-[78rem] px-4 py-6 lg:px-6">
+        <GameReplay
+          moves={reviewMoves}
+          orientation={myColor ?? 'w'}
+          result={state.result}
+          termination={state.termination}
+          pgn={reviewPgn}
+          onRematch={() => getSocket().send({ type: 'game:rematch', gameId: id })}
+          onExit={() => navigate('/games')}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="mx-auto grid max-w-[78rem] gap-5 px-4 py-6 lg:grid-cols-[minmax(0,1fr)_20rem] lg:px-6">
       {/* Coluna do tabuleiro */}
@@ -251,17 +311,7 @@ export default function GamePage() {
 
       {/* Painel lateral */}
       <aside className="flex min-h-[24rem] flex-col overflow-hidden rounded-lg bg-[var(--color-surface)]">
-        {finished ? (
-          <div className="p-4">
-            <GameOverPanel
-              state={state}
-              perspective={myColor ?? 'w'}
-              onRematch={() => getSocket().send({ type: 'game:rematch', gameId: id })}
-              onExit={() => navigate('/games')}
-            />
-          </div>
-        ) : (
-          <>
+        <>
             <div role="tablist" aria-label="Painel da partida" className="flex border-b border-[var(--color-hairline)]">
               {(['moves', 'chat'] as Tab[]).map((value) => (
                 <button
@@ -298,8 +348,7 @@ export default function GamePage() {
                 Voltar para jogar
               </Link>
             </div>
-          </>
-        )}
+        </>
       </aside>
     </div>
   );

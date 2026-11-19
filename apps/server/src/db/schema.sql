@@ -56,6 +56,19 @@ CREATE TABLE IF NOT EXISTS games (
 
 CREATE TABLE IF NOT EXISTS game_chat(id TEXT PRIMARY KEY, game_id TEXT REFERENCES games(id) ON DELETE CASCADE, user_id TEXT NOT NULL, body TEXT NOT NULL, created_at TEXT NOT NULL);
 
+
+-- Problemas de xadrez (posições reais com solução verificada)
+CREATE TABLE IF NOT EXISTS puzzles(
+  id TEXT PRIMARY KEY,
+  fen TEXT NOT NULL,
+  moves TEXT NOT NULL,             -- JSON: [{san, from, to, promotion?}]
+  rating INTEGER NOT NULL DEFAULT 1200,
+  rating_deviation INTEGER NOT NULL DEFAULT 120,
+  popularity INTEGER NOT NULL DEFAULT 50,
+  themes TEXT NOT NULL,            -- JSON: string[]
+  title TEXT NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS puzzle_attempts(id TEXT PRIMARY KEY, user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE, puzzle_id TEXT NOT NULL, solved INTEGER NOT NULL, moves TEXT NOT NULL, rating_before INTEGER, rating_after INTEGER, created_at TEXT NOT NULL);
 
 CREATE TABLE IF NOT EXISTS friendships(id TEXT PRIMARY KEY, requester_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE, addressee_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE, status TEXT NOT NULL, created_at TEXT NOT NULL, UNIQUE(requester_id, addressee_id));

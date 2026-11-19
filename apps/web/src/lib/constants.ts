@@ -23,6 +23,12 @@ export const NAV_ITEMS: NavItem[] = [
     description: 'Treine sua tática com desafios daily',
   },
   {
+    label: 'Estudos',
+    to: '/learn',
+    icon: 'book',
+    description: 'Aberturas explicadas lance a lance',
+  },
+  {
     label: 'Ranking',
     to: '/leaderboard',
     icon: 'trophy',

@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { api, ApiError } from '../lib/api.ts';
 import { useAuth } from '../lib/auth.tsx';
@@ -14,6 +14,7 @@ import type { Friend } from '@castelo/shared';
 
 export default function FriendsPage() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [username, setUsername] = useState('');
   const [feedback, setFeedback] = useState<{ tone: 'ok' | 'error'; text: string } | null>(null);
@@ -24,7 +25,29 @@ export default function FriendsPage() {
     enabled: Boolean(user),
   });
 
-  const invalidate = () => void queryClient.invalidateQueries({ queryKey: ['friends'] });
+  const challenges = useQuery({
+    queryKey: ['challenges'],
+    queryFn: ({ signal }) => api.challenges(signal),
+    enabled: Boolean(user),
+  });
+
+  const invalidate = () => {
+    void queryClient.invalidateQueries({ queryKey: ['friends'] });
+    void queryClient.invalidateQueries({ queryKey: ['challenges'] });
+  };
+
+  const acceptChallenge = useMutation({
+    mutationFn: (id: string) => api.acceptChallenge(id),
+    onSuccess: (result) => {
+      invalidate();
+      navigate(`/game/${result.gameId}`);
+    },
+  });
+
+  const declineChallenge = useMutation({
+    mutationFn: (id: string) => api.declineChallenge(id),
+    onSuccess: invalidate,
+  });
 
   const request = useMutation({
     mutationFn: (name: string) => api.requestFriend(name),
@@ -146,6 +169,51 @@ export default function FriendsPage() {
                     <Button size="sm" variant="ghost" onClick={() => remove.mutate(friend.id)}>
                       Recusar
                     </Button>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+
+          {challenges.data && challenges.data.challenges.length > 0 && (
+            <section>
+              <h2 className="text-sm font-medium text-[var(--color-ink-muted)]">
+                Convites recebidos ({challenges.data.challenges.length})
+              </h2>
+              <ul className="mt-3 divide-y divide-[var(--color-hairline)] overflow-hidden rounded-lg bg-[var(--color-surface)]">
+                {challenges.data.challenges.map((challenge) => (
+                  <li key={challenge.id} className="flex items-center gap-4 p-4">
+                    <span className="flex h-10 w-10 items-center justify-center rounded-md bg-[var(--color-sunken)] text-[var(--color-accent)]">
+                      <Icon name="knight" size={20} />
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block font-medium">
+                        {challenge.toId === user.id ? 'Você foi desafiado' : 'Convite enviado'}
+                      </span>
+                      <span className="block text-xs tabular-nums text-[var(--color-ink-faint)]">
+                        {challenge.timeControl} · {new Date(challenge.createdAt).toLocaleDateString('pt-BR')}
+                      </span>
+                    </span>
+                    {challenge.toId === user.id ? (
+                      <>
+                        <Button
+                          size="sm"
+                          variant="primary"
+                          onClick={() => acceptChallenge.mutate(challenge.id)}
+                        >
+                          Aceitar
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => declineChallenge.mutate(challenge.id)}
+                        >
+                          Recusar
+                        </Button>
+                      </>
+                    ) : (
+                      <span className="text-xs text-[var(--color-ink-faint)]">Aguardando resposta</span>
+                    )}
                   </li>
                 ))}
               </ul>

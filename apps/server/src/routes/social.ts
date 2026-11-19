@@ -11,7 +11,8 @@ import {
   listFriends,
   removeFriendship,
 } from '../repos/friends.ts';
-import { findUserByUsername } from '../repos/users.ts';
+import { findUserById, findUserByUsername } from '../repos/users.ts';
+import { getRuntime, parseTimeControl } from '../realtime/runtime.ts';
 import { newId } from '../lib/ids.ts';
 import { nowIso } from '../lib/time.ts';
 
@@ -102,13 +103,81 @@ export async function registerSocialRoutes(app: FastifyInstance): Promise<void> 
     return { challengeId: id };
   });
 
+  app.post<{ Params: { id: string } }>(
+    '/api/challenges/:id/accept',
+    { preHandler: [requireAuth, requireCsrf] },
+    async (req) => {
+      const user = currentUser(req);
+      const { id } = idParams.parse(req.params);
+      const db = getDb();
+
+      const challenge = db
+        .prepare('SELECT * FROM friends_challenges WHERE id = ? AND status = ?')
+        .get(id, 'pending') as
+        | { id: string; from_id: string; to_id: string; time_control: string }
+        | undefined;
+
+      if (!challenge || challenge.to_id !== user.id) {
+        throw new HttpError(404, 'not-found', 'Convite não encontrado.');
+      }
+
+      const control = parseTimeControl(challenge.time_control);
+      if (!control) {
+        throw new HttpError(400, 'validation', 'Controle de tempo inválido.');
+      }
+
+      const challenger = findUserById(db, challenge.from_id);
+      if (!challenger) throw new HttpError(404, 'not-found', 'Jogador não encontrado.');
+
+      const runtime = getRuntime();
+      const game = runtime.createOnlineGame(
+        {
+          id: challenger.id,
+          username: challenger.username,
+          rating: challenge.time_control.startsWith('1+') || challenge.time_control.startsWith('2+')
+            ? challenger.rating_bullet
+            : challenger.rating_blitz,
+        },
+        {
+          id: user.id,
+          username: user.username,
+          rating: challenge.time_control.startsWith('1+') || challenge.time_control.startsWith('2+')
+            ? user.rating_bullet
+            : user.rating_blitz,
+        },
+        control,
+      );
+
+      db.prepare("UPDATE friends_challenges SET status = 'accepted' WHERE id = ?").run(id);
+      return { gameId: game.id };
+    },
+  );
+
+  app.delete<{ Params: { id: string } }>(
+    '/api/challenges/:id',
+    { preHandler: [requireAuth, requireCsrf] },
+    async (req) => {
+      const user = currentUser(req);
+      const { id } = idParams.parse(req.params);
+      const result = getDb()
+        .prepare(
+          "UPDATE friends_challenges SET status = 'declined' WHERE id = ? AND (from_id = ? OR to_id = ?)",
+        )
+        .run(id, user.id, user.id);
+      if (result.changes === 0) {
+        throw new HttpError(404, 'not-found', 'Convite não encontrado.');
+      }
+      return { ok: true };
+    },
+  );
+
   app.get('/api/challenges', { preHandler: [requireAuth] }, async (req) => {
     const user = currentUser(req);
     const rows = getDb()
       .prepare(
         `SELECT id, from_id, to_id, time_control, status, created_at
          FROM friends_challenges
-         WHERE from_id = ? OR to_id = ?
+         WHERE (from_id = ? OR to_id = ?) AND status = 'pending'
          ORDER BY created_at DESC
          LIMIT 50`,
       )

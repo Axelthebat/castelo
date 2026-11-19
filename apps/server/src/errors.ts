@@ -1,4 +1,6 @@
 import type { FastifyError, FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
+import { ZodError } from 'zod';
+import { issueFields } from './lib/validate.ts';
 
 /**
  * Erro de API com corpo canónico `{ error: { code, message, fields? } }`.
@@ -38,6 +40,14 @@ export function registerErrorHandlers(app: FastifyInstance): void {
   app.setErrorHandler((err: FastifyError | HasStatus, req: FastifyRequest, reply: FastifyReply) => {
     if (err instanceof HttpError) {
       reply.code(err.status).send(apiError(err.code, err.message, err.fields));
+      return;
+    }
+
+    // Validação feita com `.parse()` dentro do handler também é 400, não 500.
+    if (err instanceof ZodError) {
+      reply.code(400).send(
+        apiError('validation', 'Dados inválidos.', issueFields(err.issues)),
+      );
       return;
     }
 

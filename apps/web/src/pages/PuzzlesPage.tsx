@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { api } from '../lib/api.ts';
 import { useAuth } from '../lib/auth.tsx';
+import { THEME_LABELS } from '../lib/format.ts';
 import { ChessBoard } from '../components/board/ChessBoard.tsx';
 import { Button } from '../components/ui/Button.tsx';
 import { Card } from '../components/ui/Card.tsx';
@@ -75,7 +76,9 @@ export default function PuzzlesPage() {
       }
 
       if (selected === expected.from && square === expected.to) {
-        const nextMoves = [...moves, expected.san];
+        // O servidor valida a solução: enviamos as jogadas em UCI.
+        const uci = `${expected.from}${expected.to}${expected.promotion ?? ''}`;
+        const nextMoves = [...moves, uci];
         setMoves(nextMoves);
         setSelected(null);
 
@@ -172,7 +175,7 @@ export default function PuzzlesPage() {
                 key={theme}
                 className="rounded-md bg-[var(--color-surface)] px-3 py-1.5 text-[var(--color-ink-muted)]"
               >
-                {theme}
+                {THEME_LABELS[theme] ?? theme}
               </span>
             ))}
           </div>
@@ -185,7 +188,9 @@ export default function PuzzlesPage() {
                 {hint ?? 'Clique na peça e depois na casa de destino.'}
               </p>
               {moves.length > 0 && (
-                <p className="mt-3 font-mono text-sm tabular-nums">{moves.join(' ')}</p>
+                <p className="mt-3 font-mono text-sm tabular-nums">
+                  {solution.slice(0, moves.length).map((step) => step.san).join(' ')}
+                </p>
               )}
               <Button
                 variant="ghost"

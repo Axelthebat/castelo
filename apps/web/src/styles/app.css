@@ -478,6 +478,14 @@
   .tabs-list {
     display: flex;
     gap: var(--space-4);
+    /* Quatro abas não cabem em 360px: a lista rola sem empurrar a página. */
+    max-width: 100%;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .tabs-list::-webkit-scrollbar {
+    display: none;
   }
 
   .tabs-tab {
@@ -733,5 +741,57 @@
   }
   to {
     opacity: 0;
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ * Movimento — só transform e opacity, sempre com fallback
+ * ------------------------------------------------------------------ */
+
+@keyframes castelo-page-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes castelo-note-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Entrada de cada troca de rota. */
+.page-enter {
+  animation: castelo-page-in 240ms var(--ease-out-gentle, cubic-bezier(0, 0, 0.2, 1)) both;
+}
+
+/* Texto que muda junto com o lance das lições. */
+.lesson-note {
+  animation: castelo-note-in 200ms var(--ease-out-gentle, cubic-bezier(0, 0, 0.2, 1)) both;
+}
+
+/* Feedback de pressão em ações. */
+.btn:active:not(:disabled) {
+  transform: scale(0.985);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-enter,
+  .lesson-note {
+    animation: none;
+  }
+
+  .btn:active:not(:disabled) {
+    transform: none;
   }
 }

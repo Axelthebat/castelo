@@ -2,6 +2,7 @@ import type {
   ApiError as ApiErrorShape,
   CurrentUser,
   Friend,
+  GameMove,
   GameSummary,
   LeaderboardEntry,
   Puzzle,
@@ -188,6 +189,26 @@ export const api = {
       body: { username, timeControl },
     }),
 
+  challenges: (signal?: AbortSignal) =>
+    apiFetch<{
+      challenges: Array<{
+        id: string;
+        fromId: string;
+        toId: string;
+        timeControl: string;
+        status: string;
+        createdAt: string;
+      }>;
+    }>('/challenges', { signal }),
+
+  acceptChallenge: (id: string) =>
+    apiFetch<{ gameId: string }>(`/challenges/${encodeURIComponent(id)}/accept`, {
+      method: 'POST',
+    }),
+
+  declineChallenge: (id: string) =>
+    apiFetch<{ ok: true }>(`/challenges/${encodeURIComponent(id)}`, { method: 'DELETE' }),
+
   createBotGame: (timeControl: string, difficulty: string) =>
     apiFetch<{ gameId: string }>('/games/bot', {
       method: 'POST',
@@ -199,6 +220,9 @@ export const api = {
 
   gamePgn: (id: string, signal?: AbortSignal) =>
     apiFetch<{ pgn: string }>(`/games/${encodeURIComponent(id)}/pgn`, { signal }),
+
+  gameMoves: (id: string, signal?: AbortSignal) =>
+    apiFetch<{ moves: GameMove[] }>(`/games/${encodeURIComponent(id)}/moves`, { signal }),
 
   move: (id: string, from: string, to: string, promotion?: string) =>
     apiFetch<import('@castelo/shared').GameMove>(

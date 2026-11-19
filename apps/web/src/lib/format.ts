@@ -120,3 +120,37 @@ export function hashString(value: string): number {
   }
   return hash >>> 0;
 }
+
+/** Temas de problemas, exibidos em português. */
+export const THEME_LABELS: Record<string, string> = {
+  backRankMate: 'Mate na última linha',
+  mateIn1: 'Mate em 1',
+  mateIn2: 'Mate em 2',
+  scholarsMate: 'Mate do estudante',
+  knightMate: 'Mate com cavalo',
+  bishopMate: 'Mate com bispo',
+  promotion: 'Promoção',
+  doubleCheck: 'Xeque duplo',
+  hangingPiece: 'Peça pendurada',
+  fork: 'Garfo',
+  pin: 'Cravo',
+  discoveredAttack: 'Ataque descoberto',
+};
+
+/** Motivos de encerramento vindos do servidor. */
+export const TERMINATION_LABELS: Record<string, string> = {
+  checkmate: 'Xeque-mate',
+  stalemate: 'Empate por stalemate',
+  'insufficient-material': 'Material insuficiente',
+  'threefold-repetition': 'Repetição tripla',
+  'fifty-move-rule': 'Regra dos 50 lances',
+  resignation: 'Desistência',
+  timeout: 'Tempo esgotado',
+  'draw-agreement': 'Empate por acordo',
+  abandoned: 'Partida abandonada',
+};
+
+export function translateTermination(value: string | null | undefined): string {
+  if (!value) return 'Partida encerrada';
+  return TERMINATION_LABELS[value] ?? value;
+}

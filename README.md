@@ -19,11 +19,11 @@ resultado de um jogo.
 | Partida online em tempo real (WebSocket) | Funcionando |
 | Matchmaking por rating e formato | Funcionando |
 | Relógio com incremento (bullet/blitz/rapid/clássico) | Funcionando |
-| Histórico de partidas e PGN | Funcionando |
+| Histórico, replay lance a lance e PGN | Funcionando |
 | Ranking por categoria | Funcionando |
-| Problemas de xadrez | Funcionando |
-| Lista de amigos e desafios | Funcionando |
-| Configurações de conta, tabuleiro e som | Funcionando |
+| Problemas de xadrez com rating e validação no servidor | Funcionando |
+| Lista de amigos, desafios e aceite na interface | Funcionando |
+| Configurações de conta, tabuleiro e som (Web Audio) | Funcionando |
 | Layout responsivo (360px, 768px, 1440px) | Funcionando |
 
 ## Partida contra o bot
@@ -86,6 +86,8 @@ castelo/
 └─ apps/web            React 19 + Vite + Tailwind CSS v4
 ```
 
+![Fluxo de uma jogada: navegador, WebSocket, LiveGame, motor e SQLite](docs/assets/arquitetura.svg)
+
 ### Onde cada decisão mora
 
 - **As regras ficam no engine.** O `packages/engine` não importa nada de `node:*` nem faz I/O, então
@@ -147,6 +149,13 @@ npm test
 
 Os fluxos de interface foram verificados com Playwright: cadastro pela tela, criação de partida
 contra o bot, jogada completa com resposta do bot, relógios correndo e lista de lances preenchida.
+
+## Movimento
+
+A interface usa transições de transform e opacidade com tokens próprios: entrada de página ao trocar
+de rota, feedback de pressão nos botões, deslizamento das peças no tabuleiro e atualização suave das
+anotações das lições. `prefers-reduced-motion` desliga todos os deslocamentos. Os efeitos sonoros são
+sintetizados com Web Audio, sem arquivos de áudio externos.
 
 ## Design
 
