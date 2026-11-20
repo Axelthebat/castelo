@@ -31,7 +31,9 @@ export type IconName =
   | 'bot'
   | 'shield'
   | 'handshake'
-  | 'chart';
+  | 'chart'
+  | 'sun'
+  | 'moon';
 
 const PATHS: Record<IconName, string> = {
   knight:
@@ -71,6 +73,8 @@ const PATHS: Record<IconName, string> = {
   handshake:
     'M3 11l3-3 3 1 2-2 2 2 3-1 3 3M8 9l2 2 2-2 2 2M7 13l2 2 2-2 2 2 2-1M11 15l2 2',
   chart: 'M4 20V4M4 20h16M8 17v-5M12.5 17V8M17 17v-8',
+  sun: 'M12 17a5 5 0 1 0 0-10 5 5 0 0 0 0 10ZM12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4',
+  moon: 'M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5Z',
 };
 
 const FILLED = new Set<IconName>([]);
@@ -116,15 +120,15 @@ export function Wordmark({ className }: { className?: string }) {
       >
         <path
           d="M6 27h20v-3H6v3Zm1-3V12h4v3h4v-3h6v3h4v9H7Z"
-          fill="var(--color-accent)"
+          fill="var(--color-gold)"
         />
         <path
           d="M6 12h4V9H8V6h3v6h4V6h2v6h4V6h3v3h-2v3h-4v-3h-6v3h-4v-3H6Z"
-          fill="var(--color-accent)"
+          fill="var(--color-gold)"
         />
         <path
           d="M6 27h20v-3H6v3Z"
-          fill="var(--color-accent-soft)"
+          fill="var(--color-gold-text)"
           opacity="0.55"
         />
       </svg>

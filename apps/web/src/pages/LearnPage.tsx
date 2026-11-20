@@ -200,7 +200,7 @@ export default function LearnPage() {
 
           <div className="rounded-lg bg-[var(--color-surface)] p-5">
             <p className="mb-2 text-sm font-medium">Sequência</p>
-            <p className="font-mono text-xs leading-relaxed text-[var(--color-ink-muted)]">
+            <p className="font-[var(--font-display)] tabular-nums text-xs leading-relaxed text-[var(--color-ink-muted)]">
               {lesson.sans.join(' ')}
             </p>
           </div>

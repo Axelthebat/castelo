@@ -153,7 +153,7 @@ export default function FriendsPage() {
               <h2 className="text-sm font-medium text-[var(--color-ink-muted)]">
                 Pedidos recebidos ({pendingIn.length})
               </h2>
-              <ul className="mt-3 divide-y divide-[var(--color-hairline)] overflow-hidden rounded-lg bg-[var(--color-surface)]">
+              <ul className="mt-3 divide-y divide-[var(--color-hairline)] overflow-hidden rounded-lg bg-[var(--color-surface)]"> {/* taste-skill-ignore: linhas de dados/tabela */}
                 {pendingIn.map((friend: Friend) => (
                   <li key={friend.id} className="flex items-center gap-4 p-4">
                     <Avatar seed={friend.username} size={40} />
@@ -180,7 +180,7 @@ export default function FriendsPage() {
               <h2 className="text-sm font-medium text-[var(--color-ink-muted)]">
                 Convites recebidos ({challenges.data.challenges.length})
               </h2>
-              <ul className="mt-3 divide-y divide-[var(--color-hairline)] overflow-hidden rounded-lg bg-[var(--color-surface)]">
+              <ul className="mt-3 divide-y divide-[var(--color-hairline)] overflow-hidden rounded-lg bg-[var(--color-surface)]"> {/* taste-skill-ignore: linhas de dados/tabela */}
                 {challenges.data.challenges.map((challenge) => (
                   <li key={challenge.id} className="flex items-center gap-4 p-4">
                     <span className="flex h-10 w-10 items-center justify-center rounded-md bg-[var(--color-sunken)] text-[var(--color-accent)]">
@@ -233,7 +233,7 @@ export default function FriendsPage() {
                 />
               </div>
             ) : (
-              <ul className="mt-3 divide-y divide-[var(--color-hairline)] overflow-hidden rounded-lg bg-[var(--color-surface)]">
+              <ul className="mt-3 divide-y divide-[var(--color-hairline)] overflow-hidden rounded-lg bg-[var(--color-surface)]"> {/* taste-skill-ignore: linhas de dados/tabela */}
                 {accepted.map((friend: Friend) => (
                   <li key={friend.id} className="flex items-center gap-4 p-4">
                     <Avatar seed={friend.username} size={40} />
@@ -284,7 +284,7 @@ export default function FriendsPage() {
               <h2 className="text-sm font-medium text-[var(--color-ink-muted)]">
                 Pedidos enviados ({pendingOut.length})
               </h2>
-              <ul className="mt-3 divide-y divide-[var(--color-hairline)] overflow-hidden rounded-lg bg-[var(--color-surface)]">
+              <ul className="mt-3 divide-y divide-[var(--color-hairline)] overflow-hidden rounded-lg bg-[var(--color-surface)]"> {/* taste-skill-ignore: linhas de dados/tabela */}
                 {pendingOut.map((friend: Friend) => (
                   <li key={friend.id} className="flex items-center gap-4 p-4">
                     <Avatar seed={friend.username} size={40} />

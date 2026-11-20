@@ -159,13 +159,23 @@ sintetizados com Web Audio, sem arquivos de áudio externos.
 
 ## Design
 
+**Arquivo de Xadrez**, uma direção editorial de museu: pergaminho, marinho e ouro antigo. Dois temas
+com a mesma linguagem:
+
+- **Arquivo** (claro): fundo `#E9E0CC`, superfície `#F3ECDD`, tinta `#27231F`, ação `#142B4A`
+- **Arquivo Noturno** (escuro): fundo `#171A18`, superfície `#212622`, tinta `#EFE8D8`, ação `#D4B276`
+
+O alternador fica na barra lateral, no rodapé da gaveta móvel e em Configurações → Aparência. Sem
+escolha manual, o site segue a preferência do sistema. O tema é aplicado antes do primeiro paint e
+persiste em `localStorage`.
+
 Identidade visual própria, desenhada a partir da análise do Chess.com registrada em
 [`docs/ANALISE-REFERENCIA.md`](docs/ANALISE-REFERENCIA.md) — a estrutura (grid de 4px, escala de
 tokens semântica, cabeçalho de 48px, coordenadas dentro das casas, cards que explicam para quem a
 opção serve), não a aparência.
 
-- Paleta de ground quente (`#1F1C19`), superfícies separadas por passo de tom e um único acento em
-  latão (`#D8A33B`), reservado às ações.
+- Superfícies separadas por passo de tom, nunca por linha ou sombra. O ouro antigo aparece só no
+  glifo da marca e em detalhes; as ações usam o azul-marinho no tema claro e o latão no escuro.
 - Sem gradientes, sem emoji e sem sombra em repouso: a separação vem da cor.
 - Tabuleiro "Nogueira" por padrão, com Esmeralda, Ardósia e Gelo disponíveis nas configurações.
 - Peças em SVG original, desenhadas para este projeto.

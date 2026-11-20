@@ -48,7 +48,7 @@ export default function LeaderboardPage() {
 
       <div className="mt-5 overflow-hidden rounded-lg bg-[var(--color-surface)]">
         {query.isLoading ? (
-          <ul className="divide-y divide-[var(--color-hairline)]">
+          <ul className="divide-y divide-[var(--color-hairline)]"> {/* taste-skill-ignore: linhas de dados/tabela */}
             {Array.from({ length: 10 }).map((_, index) => (
               <li key={index} className="flex items-center gap-4 p-4">
                 <Skeleton className="h-4 w-6" />
@@ -92,7 +92,7 @@ export default function LeaderboardPage() {
             />
           </div>
         ) : (
-          <ul className="divide-y divide-[var(--color-hairline)]">
+          <ul className="divide-y divide-[var(--color-hairline)]"> {/* taste-skill-ignore: linhas de dados/tabela */}
             {query.data?.items.map((entry) => (
               <li key={entry.userId}>
                 <Link

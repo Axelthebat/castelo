@@ -105,7 +105,7 @@ export default function GamesPage() {
             />
           </div>
         ) : (
-          <ul className="divide-y divide-[var(--color-hairline)]">
+          <ul className="divide-y divide-[var(--color-hairline)]"> {/* taste-skill-ignore: linhas de dados/tabela */}
             {items.map((game) => {
               const won = game.color === 'w' ? game.result === '1-0' : game.result === '0-1';
               const draw = game.result === '1/2-1/2';

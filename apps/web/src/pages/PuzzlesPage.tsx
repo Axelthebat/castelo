@@ -188,7 +188,7 @@ export default function PuzzlesPage() {
                 {hint ?? 'Clique na peça e depois na casa de destino.'}
               </p>
               {moves.length > 0 && (
-                <p className="mt-3 font-mono text-sm tabular-nums">
+                <p className="mt-3 font-[var(--font-display)] tabular-nums text-sm tabular-nums">
                   {solution.slice(0, moves.length).map((step) => step.san).join(' ')}
                 </p>
               )}

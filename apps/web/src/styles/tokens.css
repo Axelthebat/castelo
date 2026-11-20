@@ -5,40 +5,38 @@
  */
 
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 
   /* ---------------------------------------------------------------- *
-   * Superficies (passo de tom, nunca linha nem sombra)
+   * Direcao de arte: Arquivo de Xadrez
+   * Pergaminho de museu, marinho e ouro antigo. Contrastes medidos.
+   * Superficies separadas por passo de tom, nunca por linha ou sombra.
    * ---------------------------------------------------------------- */
-  --color-ground: #1f1c19;
-  --color-surface: #2a2622;
-  --color-raised: #332e29;
-  --color-sunken: #171512;
-  --color-hairline: #3b352e;
+  --color-ground: #e9e0cc;
+  --color-surface: #f3ecdd;
+  --color-raised: #ded3bc;
+  --color-sunken: #d8ccb2;
+  --color-hairline: #c4b79b;
 
-  /* ---------------------------------------------------------------- *
-   * Tinta
-   * ---------------------------------------------------------------- */
-  --color-ink: #f4eee2;
-  --color-ink-muted: #a79c8c;
-  --color-ink-faint: #6e6558;
+  /* Tinta: 11,88:1 no fundo, 7,88:1 na superficie. */
+  --color-ink: #27231f;
+  --color-ink-muted: #514a40;
+  --color-ink-faint: #655c50;
 
-  /* ---------------------------------------------------------------- *
-   * Acento (latao) — reservado a acoes, selecao e foco
-   * ---------------------------------------------------------------- */
-  --color-accent: #d8a33b;
-  --color-accent-soft: #edbc57;
-  --color-accent-ink: #201a0c;
+  /* Acao primaria: marinho, 10,85:1 no fundo. */
+  --color-accent: #142b4a;
+  --color-accent-soft: #1e3d64;
+  --color-accent-ink: #f7f1e3;
 
-  /* ---------------------------------------------------------------- *
-   * Estado
-   * ---------------------------------------------------------------- */
-  --color-success: #7fb069;
-  --color-danger: #d0603c;
-  --color-info: #5ea0a8;
+  /* Ouro antigo: apenas detalhes. A variante para texto bate 4,56:1. */
+  --color-gold: #a68a5c;
+  --color-gold-text: #7a5f30;
 
-  /* Tinta sobre o vermelho de perigo (contraste verificado em DECISOES-WEB.md). */
-  --color-danger-ink: #120804;
+  /* Estados arquivados, todos acima de 4,5:1 na superficie. */
+  --color-success: #2f5d45;
+  --color-danger: #7b302e;
+  --color-info: #2c5a6b;
+  --color-danger-ink: #f7f1e3;
 
   /* ---------------------------------------------------------------- *
    * Tabuleiros — paleta clara e escura de cada tema.
@@ -108,8 +106,8 @@
   /* ---------------------------------------------------------------- *
    * Elevacao — apenas no que flutua (popover, modal, tooltip)
    * ---------------------------------------------------------------- */
-  --shadow-popover: 0 0.3rem 0.8rem rgba(0, 0, 0, 0.35);
-  --shadow-modal: 0 0.8rem 2.4rem rgba(0, 0, 0, 0.6);
+  --shadow-popover: 0 0.3rem 0.8rem rgba(39, 35, 31, 0.18);
+  --shadow-modal: 0 0.8rem 2.4rem rgba(39, 35, 31, 0.3);
 
   /* ---------------------------------------------------------------- *
    * Tipografia
@@ -177,4 +175,41 @@
   --z-overlay: 40;
   --z-modal: 50;
   --z-toast: 60;
+}
+
+
+/* ------------------------------------------------------------------ *
+ * Tema escuro — Arquivo Noturno.
+ * Mesma linguagem (pergaminho, ouro antigo, tinta quente) invertida para
+ * sessões longas. Contrastes medidos: texto >= 4,5:1 em todas as
+ * superfícies, ações 8,56:1 sobre o latão.
+ * ------------------------------------------------------------------ */
+[data-theme='dark'] {
+  color-scheme: dark;
+
+  --color-ground: #171a18;
+  --color-surface: #212622;
+  --color-raised: #2b312b;
+  --color-sunken: #121512;
+  --color-hairline: #3a423a;
+
+  --color-ink: #efe8d8;
+  --color-ink-muted: #b4aa97;
+  --color-ink-faint: #9a907e;
+
+  /* No escuro a ação vira latão: o marinho do tema claro perdia contraste. */
+  --color-accent: #d4b276;
+  --color-accent-soft: #e3c894;
+  --color-accent-ink: #211a0d;
+
+  --color-gold: #a68a5c;
+  --color-gold-text: #d4b276;
+
+  --color-success: #8fb79a;
+  --color-danger: #db8878;
+  --color-info: #82b2be;
+  --color-danger-ink: #2a0e08;
+
+  --shadow-popover: 0 0.3rem 0.8rem rgba(0, 0, 0, 0.42);
+  --shadow-modal: 0 0.8rem 2.4rem rgba(0, 0, 0, 0.62);
 }

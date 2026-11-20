@@ -146,7 +146,7 @@ export default function HomePage() {
             {PRINCIPLES.map((item, index) => (
               <div
                 key={item.title}
-                className={`grid gap-2 py-6 lg:grid-cols-12 lg:gap-8 ${index > 0 ? 'border-t border-[var(--color-hairline)]' : ''}`}
+                className={`grid gap-2 py-5 lg:grid-cols-12 lg:gap-8 ${index > 0 ? 'mt-4' : ''}`}
               >
                 <dt className="text-lg font-semibold tracking-tight lg:col-span-4">{item.title}</dt>
                 <dd className="max-w-[44rem] leading-relaxed text-[var(--color-ink-muted)] lg:col-span-8">

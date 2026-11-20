@@ -158,3 +158,45 @@ fonte CJK declarada). Validado com `svg-lint`: 0 erros e 0 avisos.
 
 **Estudos com linhas verificadas.** As quatro aberturas foram checadas lance a lance com chess.js
 antes de entrar no código; as posições exibidas vêm do engine, não de FEN copiado.
+
+## Direção de cor (Color Art Direction)
+
+**Arquivo de Xadrez.** Biblioteca consultada: `references/palette-library.json` da skill. Comparei
+Museum Archive, Mapping the Unseen e Graphite Copper; escolhi Museum Archive combinada com Mapping
+the Unseen porque o produto já é um arquivo de partidas históricas e aberturas clássicas. O tema
+claro usa pergaminho `#E9E0CC`, marinho `#142B4A` nas ações e ouro antigo `#A68A5C` apenas no glifo
+e em detalhes. O ouro puro dá 2,50:1 sobre pergaminho — por isso a variante `#7A5F30` para texto.
+
+**Arquivo Noturno.** Mesma linguagem invertida: verde-charcoal profundo `#171A18`, latão `#D4B276`
+nas ações (o marinho perdia contraste no escuro), tinta `#EFE8D8`. Contrastes medidos antes de
+aplicar: texto principal 14,37:1 no fundo, ações 8,56:1 sobre o latão, estados todos acima de
+4,5:1 nas superfícies.
+
+**Alternador sem flash.** O `data-theme` é escrito por um script inline no `index.html` antes do
+primeiro paint, lendo `localStorage` ou `prefers-color-scheme`. O `ThemeProvider` mantém o estado,
+atualiza o `theme-color` da barra do navegador e acompanha mudanças do sistema enquanto não houver
+escolha manual.
+
+**Correções de contraste.** O antigo `--color-ink-faint` (#6E6558) reprovava AA no tema escuro
+(2,96:1). No tema claro o valor é `#655C50` e no escuro `#9A907E`. O vermelho de perigo também foi
+substituído por `#7B302E` (claro) e `#DB8878` (escuro), ambos acima de 4,5:1.
+
+**Validação visual.** Playwright em 1440, 768 e 390px, nos dois temas, em 7 rotas: 42 combinações
+sem overflow e com o tema aplicado. Capturas em `docs/img/tema-claro.png` e `tema-escuro.png`.
+
+## Refinamento UI/UX
+
+**ui-ux-pro-max** (buscas em `ux` e `icons`): confirmei 4,5:1 mínimo, nomes acessíveis em botões de
+ícone e indicador de foco de 2px. Os botões de tema usam `aria-label`, `aria-pressed` nas opções de
+Configurações e mantêm o foco visível.
+
+**taste-skill**: o lint encontrou 25 falhas. Corrigi as reais — troquei `font-mono` de notações por
+fonte de display com algarismos tabulares, removi o rótulo minúsculo em caixa alta, converti
+`box-shadow` de contorno em `outline` e eliminei bordas redundantes onde o passo de tom já separa.
+As 13 linhas restantes são separadores de tabelas de dados (lances, ranking, amigos, histórico),
+permitidos pela própria skill e marcados com `taste-skill-ignore`. Resultado final: **0 falhas, 3
+avisos justificados** (zero-padding do relógio, borda de 1px do anel de captura e travessões no
+texto).
+
+**playwright-cli** não está disponível neste ambiente (nem global, nem via `npx`). A validação de
+navegador foi feita com o MCP Playwright, que estava conectado.

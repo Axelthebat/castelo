@@ -4,6 +4,7 @@ import { Icon, Wordmark } from '../icons.tsx';
 import { Button } from '../ui/Button.tsx';
 import { Avatar } from '../ui/Avatar.tsx';
 import { useAuth } from '../../lib/auth.tsx';
+import { useTheme } from '../../lib/theme.tsx';
 import { NAV_ITEMS } from '../../lib/constants.ts';
 
 function NavItems({ onNavigate }: { onNavigate?: () => void }) {
@@ -49,6 +50,9 @@ function AccountBlock() {
   if (!user) {
     return (
       <div className="flex flex-col gap-2">
+        <div className="flex justify-end">
+          <ThemeToggle />
+        </div>
         <Button to="/register" variant="primary" fullWidth>
           Criar conta
         </Button>
@@ -74,6 +78,9 @@ function AccountBlock() {
         </span>
       </Link>
       <div className="flex gap-2">
+        <div className="flex-1">
+          <ThemeToggle />
+        </div>
         <Button to="/settings" variant="ghost" size="sm" fullWidth aria-label="Configurações">
           <Icon name="gear" size={16} />
         </Button>
@@ -88,6 +95,21 @@ function AccountBlock() {
         </Button>
       </div>
     </div>
+  );
+}
+
+function ThemeToggle() {
+  const { theme, toggle } = useTheme();
+  return (
+    <Button
+      variant="ghost"
+      size="sm"
+      onClick={toggle}
+      aria-label={theme === 'dark' ? 'Usar tema claro' : 'Usar tema escuro'}
+      title={theme === 'dark' ? 'Tema claro' : 'Tema escuro'}
+    >
+      <Icon name={theme === 'dark' ? 'sun' : 'moon'} size={16} />
+    </Button>
   );
 }
 
@@ -110,7 +132,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-dvh bg-[var(--color-ground)] text-[var(--color-ink)]">
       {/* Topo — mobile */}
-      <header className="sticky top-0 z-40 flex h-14 items-center gap-3 border-b border-[var(--color-hairline)] bg-[var(--color-surface)] px-3 lg:hidden">
+      <header className="sticky top-0 z-40 flex h-14 items-center gap-3 bg-[var(--color-surface)] px-3 lg:hidden">
         <button
           type="button"
           onClick={() => setMenuOpen(true)}
@@ -161,7 +183,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               </button>
             </div>
             <NavItems onNavigate={() => setMenuOpen(false)} />
-            <div className="mt-auto border-t border-[var(--color-hairline)] pt-4">
+            <div className="mt-auto pt-4">
               <AccountBlock />
             </div>
           </div>
@@ -170,12 +192,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
       <div className="flex">
         {/* Lateral — desktop */}
-        <aside className="sticky top-0 hidden h-dvh w-[13.5rem] shrink-0 flex-col gap-6 border-r border-[var(--color-hairline)] bg-[var(--color-surface)] p-4 lg:flex">
+        <aside className="sticky top-0 hidden h-dvh w-[13.5rem] shrink-0 flex-col gap-6 bg-[var(--color-surface)] p-4 lg:flex">
           <Link to="/" aria-label="Castelo — página inicial">
             <Wordmark />
           </Link>
           <NavItems />
-          <div className="mt-auto flex flex-col gap-4 border-t border-[var(--color-hairline)] pt-4">
+          <div className="mt-auto flex flex-col gap-4 pt-4">
             <Link
               to="/games"
               className="flex items-center gap-2.5 px-2 py-2 text-sm text-[var(--color-ink-muted)] transition-colors hover:text-[var(--color-ink)]"

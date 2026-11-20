@@ -3,7 +3,27 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#1F1C19" />
+    <meta name="theme-color" content="#E9E0CC" />
+    <!-- Define o tema antes do primeiro paint para evitar troca de cor visível. -->
+    <script>
+      (function () {
+        try {
+          var saved = localStorage.getItem('castelo-theme');
+          var theme =
+            saved === 'light' || saved === 'dark'
+              ? saved
+              : window.matchMedia('(prefers-color-scheme: dark)').matches
+                ? 'dark'
+                : 'light';
+          document.documentElement.setAttribute('data-theme', theme);
+          document
+            .querySelector('meta[name="theme-color"]')
+            .setAttribute('content', theme === 'dark' ? '#171a18' : '#e9e0cc');
+        } catch (e) {
+          document.documentElement.setAttribute('data-theme', 'light');
+        }
+      })();
+    </script>
     <meta
       name="description"
       content="Castelo: xadrez online. Jogue contra pessoas e contra o bot, treine tactica e acompanhe seu progresso."

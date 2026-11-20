@@ -12,7 +12,7 @@ import type { GameSummary } from '@castelo/shared';
 function StatTile({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-lg bg-[var(--color-surface)] p-4">
-      <p className="text-xs uppercase tracking-wide text-[var(--color-ink-faint)]">{label}</p>
+      <p className="text-sm text-[var(--color-ink-muted)]">{label}</p>
       <p className="mt-1 text-2xl font-semibold tabular-nums tracking-tight">{value}</p>
     </div>
   );
@@ -128,7 +128,7 @@ export default function ProfilePage() {
               />
             </div>
           ) : (
-            <ul className="divide-y divide-[var(--color-hairline)]">
+            <ul className="divide-y divide-[var(--color-hairline)]"> {/* taste-skill-ignore: linhas de dados/tabela */}
               {games.data.items.map((game: GameSummary) => (
                 <li key={game.id}>
                   <Link

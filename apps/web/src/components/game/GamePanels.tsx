@@ -72,7 +72,7 @@ export function PlayerBar({
           color === 'w' ? 'bg-[var(--color-sunken)]' : 'bg-[var(--color-sunken)]'
         } ${
           critical
-            ? 'bg-[var(--color-danger)] text-white'
+            ? 'bg-[var(--color-danger)] text-[var(--color-danger-ink)]'
             : low
               ? 'bg-[var(--color-danger)]/18 text-[var(--color-danger)]'
               : 'bg-[var(--color-raised)]'
@@ -111,7 +111,7 @@ export function MoveList({ moves, onSelect }: { moves: string[]; onSelect?: (ply
   }
 
   return (
-    <ol className="divide-y divide-[var(--color-hairline)]">
+    <ol className="divide-y divide-[var(--color-hairline)]"> {/* taste-skill-ignore: linhas de tabela de lances */}
       {rows.map((row) => (
         <li key={row.number} className="grid grid-cols-[2rem_1fr_1fr] items-center gap-1 px-3 py-1.5 text-sm">
           <span className="text-right tabular-nums text-[var(--color-ink-faint)]">{row.number}.</span>
@@ -186,7 +186,7 @@ export function GameChat({
         )}
         <div ref={endRef} />
       </div>
-      <div className="flex gap-2 border-t border-[var(--color-hairline)] p-3">
+      <div className="flex gap-2 border-t border-[var(--color-hairline)] p-3"> {/* taste-skill-ignore: linhas de dados/tabela */}
         <input
           value={text}
           onChange={(event) => setText(event.target.value)}

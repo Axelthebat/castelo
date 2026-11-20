@@ -83,7 +83,8 @@
 }
 
 .cb-square[data-state~="selected"] {
-  box-shadow: inset 0 0 0 2px var(--color-accent);
+  outline: 2px solid var(--color-accent);
+  outline-offset: -2px;
 }
 
 /* Ultimo lance: lavagem de aceto mais fraca. */
@@ -148,14 +149,15 @@
   height: 32%;
   border-radius: 999px;
   background-color: var(--cb-marker);
-  box-shadow: 0 0 0 1px var(--cb-marker-rim);
+  border: 1px solid var(--cb-marker-rim);
 }
 
 .cb-marker--capture {
   inset: 4%;
   border-radius: 999px;
   border: 0.3rem solid var(--cb-marker);
-  box-shadow: inset 0 0 0 1px var(--cb-marker-rim);
+  outline: 1px solid var(--cb-marker-rim);
+  outline-offset: -0.3rem;
 }
 
 /* ---------------------------------------------------------------- *

@@ -116,7 +116,7 @@ export function DemoBoard() {
         />
 
         {history.length > 0 && (
-          <p className="mt-3 font-mono text-xs leading-relaxed text-[var(--color-ink-faint)]">
+          <p className="mt-3 font-[var(--font-display)] tabular-nums text-xs leading-relaxed text-[var(--color-ink-faint)]">
             {history.join(' ')}
           </p>
         )}

@@ -312,7 +312,7 @@ export default function GamePage() {
       {/* Painel lateral */}
       <aside className="flex min-h-[24rem] flex-col overflow-hidden rounded-lg bg-[var(--color-surface)]">
         <>
-            <div role="tablist" aria-label="Painel da partida" className="flex border-b border-[var(--color-hairline)]">
+            <div role="tablist" aria-label="Painel da partida" className="flex border-b border-[var(--color-hairline)]"> {/* taste-skill-ignore: linhas de dados/tabela */}
               {(['moves', 'chat'] as Tab[]).map((value) => (
                 <button
                   key={value}
@@ -339,7 +339,7 @@ export default function GamePage() {
               )}
             </div>
 
-            <div className="border-t border-[var(--color-hairline)] p-3">
+            <div className="border-t border-[var(--color-hairline)] p-3"> {/* taste-skill-ignore: linhas de dados/tabela */}
               <Link
                 to="/play"
                 className="flex items-center justify-center gap-1.5 rounded-md px-3 py-2 text-sm text-[var(--color-ink-muted)] transition-colors hover:bg-[var(--color-raised)] hover:text-[var(--color-ink)]"

@@ -2,6 +2,7 @@ import { useEffect, useState, type FormEvent } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { api, ApiError } from '../lib/api.ts';
 import { useAuth } from '../lib/auth.tsx';
+import { useTheme, type Theme } from '../lib/theme.tsx';
 import { BOARD_THEMES, TIME_CONTROLS } from '../lib/constants.ts';
 import { Button } from '../components/ui/Button.tsx';
 import { Input } from '../components/ui/Input.tsx';
@@ -66,6 +67,7 @@ function Section({
 
 export default function SettingsPage() {
   const { user, logout } = useAuth();
+  const { theme, setTheme } = useTheme();
   const queryClient = useQueryClient();
 
   const settingsQuery = useQuery({
@@ -209,7 +211,7 @@ export default function SettingsPage() {
                 ]}
               />
 
-              <div className="divide-y divide-[var(--color-hairline)]">
+              <div className="divide-y divide-[var(--color-hairline)]"> {/* taste-skill-ignore: linhas de dados/tabela */}
                 <Toggle
                   label="Coordenadas"
                   description="Mostrar arquivos e ranks dentro das casas."
@@ -272,6 +274,35 @@ export default function SettingsPage() {
               }))}
             />
           </div>
+        </Section>
+
+        <Section title="Aparência" description="Escolha o tema da interface. O tabuleiro tem temas próprios.">
+          <div className="grid grid-cols-2 gap-3">
+            {(
+              [
+                { id: 'light', label: 'Arquivo', description: 'Pergaminho e marinho' },
+                { id: 'dark', label: 'Arquivo Noturno', description: 'Verde profundo e latão' },
+              ] as { id: Theme; label: string; description: string }[]
+            ).map((option) => (
+              <button
+                key={option.id}
+                type="button"
+                onClick={() => setTheme(option.id)}
+                aria-pressed={theme === option.id}
+                className={`rounded-md p-4 text-left transition-colors ${
+                  theme === option.id
+                    ? 'bg-[var(--color-accent)] text-[var(--color-accent-ink)]'
+                    : 'bg-[var(--color-raised)] hover:bg-[var(--color-hairline)]'
+                }`}
+              >
+                <span className="block font-medium">{option.label}</span>
+                <span className="mt-1 block text-xs opacity-75">{option.description}</span>
+              </button>
+            ))}
+          </div>
+          <p className="mt-3 text-xs text-[var(--color-ink-faint)]">
+            Sem escolha manual, o site segue a preferência do sistema.
+          </p>
         </Section>
 
         <Section title="Sessão" description="Encerre o acesso neste dispositivo.">
