@@ -228,3 +228,10 @@ não foi adicionada: o projeto exige identidade e assets próprios.
 
 **playwright-cli** não está disponível na sessão; a verificação de navegador segue com MCP
 Playwright.
+
+## Acesso por domínio próprio
+
+O Vite 6 bloqueia requisições cujo `Host` não está na lista `server.allowedHosts`. O front é
+servido por trás de um proxy em `castle.x3r0ththeproto.shop`, então o config libera
+`.x3r0ththeproto.shop` (todos os subdomínios) além de localhost e 127.0.0.1. Verificado com
+`curl` enviando esse `Host`: página 200, proxy `/api` 200 e upgrade `/ws` 101 com sessão válida.

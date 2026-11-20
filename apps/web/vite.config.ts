@@ -15,6 +15,9 @@ export default defineConfig({
     host: '0.0.0.0',
     port: 5173,
     strictPort: true,
+    // O site é servido por trás de um proxy com domínio próprio. O ponto
+    // inicial permite qualquer subdomínio de x3r0ththeproto.shop.
+    allowedHosts: ['localhost', '127.0.0.1', '.x3r0ththeproto.shop'],
     proxy: {
       '/api': 'http://localhost:4000',
       '/ws': {
