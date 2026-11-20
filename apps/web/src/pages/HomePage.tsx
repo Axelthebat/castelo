@@ -117,7 +117,7 @@ export default function HomePage() {
               className={`group flex flex-col justify-between gap-6 rounded-lg bg-[var(--color-surface)] p-6 transition-colors hover:bg-[var(--color-raised)] ${option.span}`}
             >
               <div>
-                <span className="inline-flex h-11 w-11 items-center justify-center rounded-md bg-[var(--color-sunken)] text-[var(--color-accent)]">
+                <span className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-[var(--color-sunken)] text-[var(--color-accent)]">
                   <Icon name={option.icon} size={22} />
                 </span>
                 <h3 className="mt-5 text-xl font-semibold tracking-tight">{option.title}</h3>

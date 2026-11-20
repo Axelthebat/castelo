@@ -19,6 +19,8 @@ export interface PlayerBarProps {
   onResign?: () => void;
   onOfferDraw?: () => void;
   canAct?: boolean;
+  /** segundo clique: confirma a ação destrutiva */
+  resignLabel?: string;
 }
 
 export function PlayerBar({
@@ -30,6 +32,7 @@ export function PlayerBar({
   onResign,
   onOfferDraw,
   canAct = false,
+  resignLabel = 'Desistir',
 }: PlayerBarProps) {
   const low = remaining <= 20_000;
   const critical = remaining <= 5_000;
@@ -61,8 +64,13 @@ export function PlayerBar({
             <Icon name="handshake" size={15} />
             Empatar
           </Button>
-          <Button variant="ghost" size="sm" onClick={onResign}>
-            Desistir
+          <Button
+            variant={resignLabel === 'Desistir' ? 'ghost' : 'danger'}
+            size="sm"
+            onClick={onResign}
+            aria-label={resignLabel}
+          >
+            {resignLabel}
           </Button>
         </div>
       )}

@@ -177,8 +177,9 @@
     min-height: 44px;
     padding-inline: var(--space-16);
     border: 0;
-    border-radius: var(--radius-3);
+    border-radius: var(--radius-control);
     background: transparent;
+    touch-action: manipulation;
     color: var(--color-ink);
     font-family: var(--font-display);
     font-size: var(--text-base);
@@ -263,8 +264,8 @@
   .card {
     background-color: var(--color-surface);
     color: var(--color-ink);
-    border-radius: var(--radius-5);
-    padding: var(--space-16);
+    border-radius: var(--radius-card);
+    padding: var(--card-padding);
   }
 
   .card-head {
@@ -742,6 +743,13 @@
   to {
     opacity: 0;
   }
+}
+
+/* Cabeçalhos com quebra equilibrada: evita uma palavra solitária na última linha. */
+h1,
+h2,
+h3 {
+  text-wrap: balance;
 }
 
 /* ------------------------------------------------------------------ *

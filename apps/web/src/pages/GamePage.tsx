@@ -31,6 +31,7 @@ export default function GamePage() {
   const [now, setNow] = useState(() => Date.now());
   const [reviewMoves, setReviewMoves] = useState<GameMove[]>([]);
   const [reviewPgn, setReviewPgn] = useState<string | null>(null);
+  const [confirmResign, setConfirmResign] = useState(false);
 
   const settings = useQuery({
     queryKey: ['settings'],
@@ -304,7 +305,16 @@ export default function GamePage() {
           active={state.turn === bottomColor && !finished}
           connected
           canAct={!finished && Boolean(myColor)}
-          onResign={() => getSocket().send({ type: 'game:resign', gameId: id })}
+          onResign={() => {
+            if (confirmResign) {
+              getSocket().send({ type: 'game:resign', gameId: id });
+              setConfirmResign(false);
+            } else {
+              setConfirmResign(true);
+              window.setTimeout(() => setConfirmResign(false), 4000);
+            }
+          }}
+          resignLabel={confirmResign ? 'Confirmar desistência' : 'Desistir'}
           onOfferDraw={() => getSocket().send({ type: 'game:offer_draw', gameId: id })}
         />
       </div>

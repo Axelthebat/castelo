@@ -183,7 +183,7 @@ export default function FriendsPage() {
               <ul className="mt-3 divide-y divide-[var(--color-hairline)] overflow-hidden rounded-lg bg-[var(--color-surface)]"> {/* taste-skill-ignore: linhas de dados/tabela */}
                 {challenges.data.challenges.map((challenge) => (
                   <li key={challenge.id} className="flex items-center gap-4 p-4">
-                    <span className="flex h-10 w-10 items-center justify-center rounded-md bg-[var(--color-sunken)] text-[var(--color-accent)]">
+                    <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--color-sunken)] text-[var(--color-accent)]">
                       <Icon name="knight" size={20} />
                     </span>
                     <span className="min-w-0 flex-1">

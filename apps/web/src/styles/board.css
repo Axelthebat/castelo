@@ -39,6 +39,7 @@
   border: 0;
   background-color: var(--cb-dark);
   cursor: pointer;
+  touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
 }
 

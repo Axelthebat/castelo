@@ -200,3 +200,31 @@ texto).
 
 **playwright-cli** não está disponível neste ambiente (nem global, nem via `npx`). A validação de
 navegador foi feita com o MCP Playwright, que estava conectado.
+
+## Refinamentofinal das skills de design
+
+Skills carregadas: `color-art-direction`, `ui-ux-pro-max`, `design-system`, `minimalist-ui`,
+`frontend-design`, `design-taste-frontend` (via bridge), `high-end-visual-design`,
+`web-design-guidelines` e `cantos-apple`.
+
+**Tokens em três camadas.** Adicionei `--radius-card`, `--radius-control` e `--card-padding` na
+camada de componente, derivados dos tokens semânticos. `.btn`, `.card` e o tabuleiro passaram a
+usá-los; os valores não mudaram, mas agora há um único ponto de alteração.
+
+**Diretrizes Vercel aplicadas.** `text-wrap: balance` nos cabeçalhos (sem palavra solitária),
+`touch-action: manipulation` em botões e casas do tabuleiro, e confirmação em duas etapas para
+"Desistir" — ação destrutiva não acontece no primeiro clique.
+
+**Auditoria de cantos concêntricos.** Os suportes de ícone dentro dos cartões viraram círculos
+(`rounded-full`), forma isenta da regra de concentricidade e coerente com o motivo de selo de cera
+do arquivo. Os demais pares (botão dentro de cartão com 24px de respiro) exigiriam raio externo de
+32px para serem estritamente concêntricos — isso mudaria a identidade editorial de cantos nítidos,
+então mantive o raio atual e registro a divergência deliberada, sem alterar tokens globais.
+
+**O que não apliquei e por quê.** As direções Ethereal Glass, Z-Axis Cascade, pílulas gigantes,
+gradientes e `backdrop-blur` de `high-end-visual-design` conflitam com a direção Arquivo e com as
+regras de taste/ui-ux já adotadas. O frontend-design pede uma assinatura "Created By Deerflow", que
+não foi adicionada: o projeto exige identidade e assets próprios.
+
+**playwright-cli** não está disponível na sessão; a verificação de navegador segue com MCP
+Playwright.

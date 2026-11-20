@@ -54,7 +54,7 @@ export default function PlayPage() {
         {OPTIONS.map((option) => (
           <Card key={option.to} className="flex flex-col gap-5 p-6">
             <div className="flex items-start gap-4">
-              <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-md bg-[var(--color-sunken)] text-[var(--color-accent)]">
+              <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[var(--color-sunken)] text-[var(--color-accent)]">
                 <Icon name={option.icon} size={22} />
               </span>
               <div>

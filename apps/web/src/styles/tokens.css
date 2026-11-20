@@ -103,6 +103,11 @@
   --radius-5: 0.5rem;
   --radius-10: 1rem;
 
+  /* Tokens de componente: derivam dos semânticos para um único ponto de mudança. */
+  --radius-card: var(--radius-5);
+  --radius-control: var(--radius-3);
+  --card-padding: var(--space-16);
+
   /* ---------------------------------------------------------------- *
    * Elevacao — apenas no que flutua (popover, modal, tooltip)
    * ---------------------------------------------------------------- */
