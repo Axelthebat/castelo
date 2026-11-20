@@ -235,3 +235,40 @@ O Vite 6 bloqueia requisições cujo `Host` não está na lista `server.allowedH
 servido por trás de um proxy em `castle.x3r0ththeproto.shop`, então o config libera
 `.x3r0ththeproto.shop` (todos os subdomínios) além de localhost e 127.0.0.1. Verificado com
 `curl` enviando esse `Host`: página 200, proxy `/api` 200 e upgrade `/ws` 101 com sessão válida.
+
+## Peças: adoção da referência licenciada
+
+Depois de várias iterações manuais sem chegar à semelhança desejada, troquei a
+abordagem: as 12 silhuetas agora reproduzem fielmente o conjunto de Cburnett
+(Wikimedia Commons, **CC BY-SA 3.0**) —
+https://commons.wikimedia.org/wiki/Category:Cburnett_chess_sets.
+
+Crédito integral: Cburnett e colaboradores do Wikimedia Commons. Licença
+CC BY-SA 3.0, com atribuição. As referências baixadas estão registradas na
+contact sheet `docs/img/referencia-pecas.png`, e a prova de fidelidade do cavalo
+em `docs/img/cavalo-comparativo.png`.
+
+O que é original do Castelo: o sistema de temas. Os SVGs da referência têm
+cores fixas (`#ffffff`, `#000000`, `#ffce9e`); aqui elas foram substituídas por
+`--piece-fill`, `--piece-stroke` e `--piece-shade`, e mantive a sombra em dois
+tons que assina a direção Arquivo. O campo `marks` do `PieceGeometry` foi
+adicionado para os pontos sólidos (olho e nariz do cavalo), que na referência
+são preenchidos e não apenas contornados.
+
+## Compartilhamento de gravações
+
+O replay agora tem três saídas, todas no cartão "Compartilhar":
+
+- **Copiar link** — copia a URL atual, que sempre reflete o lance via `?ply=N`.
+- **Compartilhar** — usa a Web Share API nativa quando disponível (celular),
+  com fallback para copiar o link. Cancelar a folha nativa não gera erro.
+- **Copiar PGN** — agora confirma por toast.
+
+A URL é sincronizada com o lance usando `history.replaceState`, sem poluir o
+histórico do navegador. O lance da URL é aplicado quando os lances chegam do
+servidor — clampear contra `moves.length === 0` na montagem zerava links
+profundos. A rota de leitura da partida é pública, então o link funciona para
+quem não tem conta.
+
+O `ToastProvider`, que já existia mas não estava montado, passou a fazer parte
+da árvore do app.

@@ -73,6 +73,9 @@ export function Piece({ type, color, className }: PieceProps) {
           strokeLinecap="round"
         />
       ))}
+      {geometry.marks?.map((d, index) => (
+        <path key={index} d={d} fill="var(--piece-stroke)" />
+      ))}
     </svg>
   );
 }

@@ -1,9 +1,10 @@
-import { useEffect, useMemo, useState } from 'react';
-import type { GameMove, GameState } from '@castelo/shared';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import type { GameMove } from '@castelo/shared';
 import { START_FEN } from '@castelo/engine';
 import { ChessBoard } from '../board/ChessBoard.tsx';
 import { Button } from '../ui/Button.tsx';
 import { Icon } from '../icons.tsx';
+import { useToast } from '../ui/Toast.tsx';
 import { translateTermination } from '../../lib/format.ts';
 import { MoveList } from './GamePanels.tsx';
 
@@ -17,6 +18,12 @@ interface ReplayProps {
   onExit?: () => void;
 }
 
+/** Lê o lance alvo de `?ply=N` na hora da montagem. */
+function plyFromUrl(): number {
+  const raw = Number(new URLSearchParams(window.location.search).get('ply') ?? 0);
+  return Number.isFinite(raw) && raw > 0 ? Math.max(0, Math.floor(raw)) : 0;
+}
+
 /** Revisão de uma partida encerrada, com navegação lance a lance. */
 export function GameReplay({
   moves,
@@ -27,18 +34,39 @@ export function GameReplay({
   onRematch,
   onExit,
 }: ReplayProps) {
-  const [ply, setPly] = useState(0);
+  const initialPly = useRef(plyFromUrl());
+  const [ply, setPly] = useState(initialPly.current);
+  const appliedInitialPly = useRef(false);
+  const toast = useToast();
 
   const fen = useMemo(() => {
     if (ply === 0) return START_FEN;
-    const move = moves[ply - 1];
-    return move?.fen ?? START_FEN;
+    return moves[ply - 1]?.fen ?? START_FEN;
   }, [moves, ply]);
 
   const lastMove = useMemo(() => {
     const move = moves[ply - 1];
     return move ? { from: move.from, to: move.to } : null;
   }, [moves, ply]);
+
+  /*
+   * Os lances chegam depois que a partida termina. Aplicamos o lance da URL
+   * somente quando eles existem — se clampássemos contra `moves.length === 0`
+   * na montagem, um link `?ply=3` seria zerado antes do carregamento.
+   */
+  useEffect(() => {
+    if (moves.length === 0 || appliedInitialPly.current) return;
+    appliedInitialPly.current = true;
+    setPly(Math.min(initialPly.current, moves.length));
+  }, [moves.length]);
+
+  /* A URL sempre reflete o lance atual, então o link copiado abre exatamente aqui. */
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    if (ply === 0) url.searchParams.delete('ply');
+    else url.searchParams.set('ply', String(ply));
+    window.history.replaceState(null, '', url);
+  }, [ply]);
 
   useEffect(() => {
     function onKey(event: KeyboardEvent) {
@@ -51,6 +79,44 @@ export function GameReplay({
 
   const resultLabel =
     result === '1/2-1/2' ? 'Empate' : result === '1-0' ? 'Brancas venceram' : result === '0-1' ? 'Pretas venceram' : 'Sem resultado';
+
+  const copyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      toast.success(ply > 0 ? `Link copiado — abre no lance ${ply}.` : 'Link da partida copiado.');
+    } catch {
+      toast.error('Não foi possível copiar o link.');
+    }
+  };
+
+  const copyPgn = async () => {
+    if (!pgn) return;
+    try {
+      await navigator.clipboard.writeText(pgn);
+      toast.success('PGN copiado.');
+    } catch {
+      toast.error('Não foi possível copiar o PGN.');
+    }
+  };
+
+  const share = async () => {
+    const data = {
+      title: 'Partida no Castelo',
+      text: pgn ? `Confira esta partida no Castelo:\n\n${pgn}` : 'Confira esta partida no Castelo.',
+      url: window.location.href,
+    };
+    const nav = navigator as Navigator & { share?: (value: typeof data) => Promise<void> };
+    if (typeof nav.share === 'function') {
+      try {
+        await nav.share(data);
+        return;
+      } catch (error) {
+        /* O usuário cancelando a folha nativa não é erro. */
+        if (error instanceof DOMException && error.name === 'AbortError') return;
+      }
+    }
+    await copyLink();
+  };
 
   return (
     <div className="grid gap-5 lg:grid-cols-[minmax(0,26rem)_minmax(0,20rem)] lg:items-start">
@@ -136,17 +202,30 @@ export function GameReplay({
             <pre className="max-h-32 overflow-auto whitespace-pre-wrap break-words font-mono text-xs leading-relaxed text-[var(--color-ink-muted)]">
               {pgn}
             </pre>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="mt-2"
-              onClick={() => void navigator.clipboard?.writeText(pgn)}
-            >
+            <Button variant="ghost" size="sm" className="mt-2" onClick={() => void copyPgn()}>
               <Icon name="copy" size={15} />
               Copiar PGN
             </Button>
           </div>
         )}
+
+        <div className="rounded-lg bg-[var(--color-surface)] p-4">
+          <p className="mb-2 text-sm font-medium">Compartilhar</p>
+          <div className="flex flex-wrap gap-2">
+            <Button variant="secondary" size="sm" onClick={() => void copyLink()}>
+              <Icon name="link" size={15} />
+              Copiar link
+            </Button>
+            <Button variant="secondary" size="sm" onClick={() => void share()}>
+              <Icon name="send" size={15} />
+              Compartilhar
+            </Button>
+          </div>
+          <p className="mt-2 text-xs leading-relaxed text-[var(--color-ink-faint)]">
+            O link abre no lance {ply} de {moves.length}. Compartilhe com quem quiser —
+            não é preciso ter conta.
+          </p>
+        </div>
 
         <div className="flex gap-2">
           {onRematch && (

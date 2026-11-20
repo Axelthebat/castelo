@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from '../lib/auth.tsx';
 import { ThemeProvider } from '../lib/theme.tsx';
+import { ToastProvider } from '../components/ui/Toast.tsx';
 import { AppShell } from '../components/layout/AppShell.tsx';
 import { Spinner } from '../components/ui/Spinner.tsx';
 
@@ -48,6 +49,7 @@ export default function App() {
       <BrowserRouter>
         <ThemeProvider>
           <AuthProvider>
+            <ToastProvider>
             <AppShell>
             <Suspense fallback={<RouteFallback />}>
               <Routes>
@@ -71,6 +73,7 @@ export default function App() {
               </Routes>
             </Suspense>
             </AppShell>
+            </ToastProvider>
           </AuthProvider>
         </ThemeProvider>
       </BrowserRouter>
